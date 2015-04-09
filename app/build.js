@@ -31,14 +31,14 @@ define(function (require) {
         if (chart === 'map') {
             hasMap = true;
         }
-        return 'echarts/chart/' + chart.toLowerCase();
+        return 'echarts/chart/' + chart;
     });
 
     // Including components
     var components = (BUILD_CONFIG.components || '').split(',').filter(function (component) {
         return component;
     }).map(function (component) {
-        return 'echarts/component/' + component.toLowerCase();
+        return 'echarts/component/' + component;
     });
 
     var echartsDeps = ['echarts'].concat(charts).concat(components);

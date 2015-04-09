@@ -98,10 +98,10 @@
 
             var url = 'build.html?charts=' + charts.join(',') + '&components=' + components.join(',');
 
-            if (! $('#compress input').attr('checked')) {
+            if (! $('#compress input').is(':checked')) {
                 url += '&source=true';
             }
-            if ($('#amd input').attr('checked')) {
+            if ($('#amd input').is(':checked')) {
                 url += '&amd=true';
             }
 
