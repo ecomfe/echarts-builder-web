@@ -3,10 +3,110 @@
 <head>
     <title>ECharts 在线构建工具</title>
     <meta charset="utf-8" />
+    <script src="lib/jquery.js"></script>
 </head>
 <body>
-    <button id="build">生 成</button>
+    
+    <div id="main">
+        <button id="build">生 成</button>
+        <div id="configuration">
+            <div id="charts">
+                <h3>图表</h3>
+                <ul>
+                    <li>
+                        <input type="checkbox" name="bar">
+                        <label for="force">柱状图</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" name="line">
+                        <label for="line">折线图</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" name="pie">
+                        <label for="pie">饼图</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" name="radar">
+                        <label for="radar">雷达图</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" name="scatter">
+                        <label for="scatter">散点图</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" name="k">
+                        <label for="k">K 线图</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" name="map">
+                        <label for="map">地图</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" name="chord">
+                        <label for="chord">和弦图</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" name="force">
+                        <label for="force">力导向图</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" name="gauge">
+                        <label for="gauge">仪表盘</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" name="funnel">
+                        <label for="funnel">漏斗图</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" name="eventRiver">
+                        <label for="eventRiver">事件河流图</label>
+                    </li>
+                </ul>
+            </div>
+            <div id="components">
+                <h3>组件</h3>
+                <ul>
+                    <li>
+                        <input type="checkbox" name="dataRange">
+                        <label for="dataRange">值域漫游</label>
+                    </li>
+                </ul>
+            </div>
+            <div id="compress">
+                <input type="checkbox" name="compress" checked="checked">
+                <label for="dataRange">代码压缩</label>
+            </div>
+            <div id="amd">
+                <input type="checkbox" name="amd" checked="checked">
+                <label for="dataRange">AMD</label>
+            </div>
+        </div>
+    </div>
 
-    <script></script>
+
+    <script>
+        $("#build").click(function () {
+            var charts = [];
+            $('#charts input:checked').each(function () {
+                charts.push($(this).attr('name'));
+            });
+
+            var components = [];
+            $('#components input:checked').each(function () {
+                components.push($(this).attr('name'));
+            });
+
+            var url = 'build.html?charts=' + charts.join(',') + '&components=' + components.join(',');
+
+            if (! $('#compress input').attr('checked')) {
+                url += '&source=true';
+            }
+            if ($('#amd input').attr('checked')) {
+                url += '&amd=true';
+            }
+
+            window.open(url);
+        });
+    </script>
 </body>
 <body>

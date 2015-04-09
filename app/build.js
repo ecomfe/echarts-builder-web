@@ -80,8 +80,9 @@ define(function (require) {
         if (! BUILD_CONFIG.amd) {
             code = startWrapperCode + eslCode + code + endWrapperCode;
         }
-
-        code = jsCompress(code);
+        if (! BUILD_CONFIG.source) {
+            code = jsCompress(code);
+        }
 
         var URL = window.URL || window.webkitURL;
 
