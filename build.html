@@ -1,0 +1,45 @@
+<!Doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <script src="lib/esl.js"></script>
+    <script src="lib/uglify.js"></script>
+</head>
+<body>
+
+    <h1 style="text-align:center;" id="tip">
+        &nbsp;&nbsp;&nbsp;代码构建中....
+    </h1>
+
+    <script>
+
+        var search = window.location.search;
+
+        var BUILD_CONFIG = {};
+        if (search) {
+            search = search.slice(search.indexOf('?') + 1);
+            var params = search.split('&');
+            for (var i = 0; i < params.length; i++) {
+                var keyValue = params[i].split('=');
+                var key = decodeURIComponent(keyValue[0]);
+                var value = decodeURIComponent(keyValue[1]);
+                BUILD_CONFIG[key.toLowerCase()] = value;
+            }
+        }
+
+        require.config({
+            packages: [{
+                name: 'zrender',
+                location: 'src/zrender' + (BUILD_CONFIG.dev ? '-dev' : ''),
+                main: 'zrender'
+            }, {
+                name: 'echarts',
+                location: 'src/echarts' + (BUILD_CONFIG.dev ? '-dev' : ''),
+                main: 'echarts'
+            }]
+        });
+
+        require(['app/build']);
+    </script>
+</body>
+</html>
