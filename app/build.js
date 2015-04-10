@@ -3,9 +3,17 @@ define(function (require) {
     var echartsPackageMainCode = 'define(\'echarts\', [\'echarts/echarts\'], function (echarts) { return echarts;});\n';
     var zrenderPackageMainCode = 'define(\'zrender\', [\'zrender/zrender\'], function (zrender) { return zrender;});\n';
 
-    var eslCode = require('text!../lib/esl.js');
+    var etpl =require('../lib/etpl');
+    etpl.config({
+        commandOpen: '/**',
+        commandClose: '*/'
+    });
+
+    var amdCode = require('text!../chunk/amd.js');
     var startWrapperCode = require('text!../chunk/start.js');
     var endWrapperCode = require('text!../chunk/end.js');
+
+    var saveAs = require('../lib/FileSaver');
 
     function jsCompress(source) {
         var ast = UglifyJS.parse(source);
@@ -78,22 +86,41 @@ define(function (require) {
         code += echartsPackageMainCode;
 
         if (! BUILD_CONFIG.amd) {
-            code = startWrapperCode + eslCode + code + endWrapperCode;
+            endWrapperCode = etpl.compile(endWrapperCode)({
+                hasMap: hasMap,
+                charts: charts
+            });
+            code = startWrapperCode + amdCode + code + endWrapperCode;
         }
         if (! BUILD_CONFIG.source) {
             code = jsCompress(code);
         }
 
-        var URL = window.URL || window.webkitURL;
 
         var blob = new Blob([code], {
             type: 'text/plain;charset=utf8'
         });
-        var scriptUrl = URL.createObjectURL(blob);
 
-        URL.revokeObjectURL(blob);
+        // var URL = window.URL || window.webkitURL;
+        // var scriptUrl = URL.createObjectURL(blob);
 
-        window.open(scriptUrl);
+        // URL.revokeObjectURL(blob);
+
+        // window.open(scriptUrl);
+        
+        var fileName = ['echarts'];
+        if (BUILD_CONFIG.amd) {
+            fileName.push('amd');
+        }
+        if (BUILD_CONFIG.source) {
+            fileName.push('source');
+        }
+        fileName.push('js');
+        saveAs(blob, fileName.join('.'));
+
+        setTimeout(function () {
+            window.close();
+        }, 3000);
 
         document.getElementById('tip').innerHTML = '构建完毕';
     });
