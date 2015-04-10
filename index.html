@@ -74,11 +74,15 @@
             </div>
             <div id="compress">
                 <input type="checkbox" name="compress" checked="checked">
-                <label for="dataRange">代码压缩</label>
+                <label for="compress">代码压缩</label>
             </div>
             <div id="amd">
                 <input type="checkbox" name="amd" checked="checked">
-                <label for="dataRange">AMD</label>
+                <label for="amd">AMD</label>
+            </div>
+            <div id="dev">
+                <input type="checkbox" name="dev">
+                <label for="dev">开发版本</label>
             </div>
         </form>
     </div>
@@ -103,6 +107,9 @@
             }
             if ($('#amd input').is(':checked')) {
                 url += '&amd=true';
+            }
+            if ($('#dev input').is(':checked')) {
+                url += '&dev=true';
             }
 
             window.open(url);
