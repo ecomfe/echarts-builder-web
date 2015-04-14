@@ -100,18 +100,18 @@
             </section>
             <section>
                 <h3>其它选项<span>other</span></h3>
-                <div id="compress">
-                    <input type="checkbox" name="compress" checked="checked">
+                <p>
+                    <input type="checkbox" id="compress" name="compress" checked="checked">
                     <label for="compress">代码压缩</label>
-                </div>
-                <div id="amd">
-                    <input type="checkbox" name="amd" checked="checked">
+                </p>
+                <p>
+                    <input type="checkbox" id="amd" name="amd" checked="checked">
                     <label for="amd">AMD</label>
-                </div>
-                <div id="dev">
-                    <input type="checkbox" name="dev">
+                </p>
+                <p>
+                    <input type="checkbox" id="dev" name="dev">
                     <label for="dev">开发版本</label>
-                </div>
+                </p>
             </section>
         </div>
         <div id="action">
@@ -152,13 +152,13 @@
 
             var url = 'build.html?charts=' + charts.join(',') + '&components=' + components.join(',');
 
-            if (! $('#compress input').is(':checked')) {
+            if (! $('#compress').prop('checked')) {
                 url += '&source=true';
             }
-            if ($('#amd input').is(':checked')) {
+            if ($('#amd').prop('checked')) {
                 url += '&amd=true';
             }
-            if ($('#dev input').is(':checked')) {
+            if ($('#dev').prop('checked')) {
                 url += '&dev=true';
             }
 
