@@ -1,0 +1,132 @@
+body {
+  margin: 0px;
+  text-align: center;
+}
+li {
+  list-style: none;
+}
+ul {
+  margin: 0px;
+  padding: 0px;
+}
+header {
+  height: 80px;
+  background-color: #3c485c;
+  text-align: left;
+}
+header h1 {
+  color: white;
+  margin: 0px 30px;
+  padding: 0px;
+  line-height: 80px;
+  float: left;
+}
+header nav {
+  float: right;
+  margin-right: 50px;
+  padding: 30px 0px;
+}
+header nav li {
+  display: inline-block;
+  height: 20px;
+  padding: 0px 20px;
+  border-right: 1px solid #728d98;
+}
+header nav li a {
+  color: white;
+  text-decoration: none;
+}
+header nav li a:hover {
+  text-decoration: underline;
+}
+main {
+  width: 1000px;
+  margin: 0px auto;
+  text-align: left;
+}
+main h1 {
+  text-align: center;
+  color: #3c485c;
+  font-weight: normal;
+}
+#configuration > section {
+  border-bottom: 1px solid #e5e5e5;
+  margin-top: 40px;
+}
+#configuration h3 {
+  color: #3c485c;
+  font-size: 26px;
+  font-weight: normal;
+}
+#configuration h3 span {
+  font-size: 16px;
+  margin-left: 5px;
+}
+#configuration ul {
+  margin: 10px;
+}
+#configuration li {
+  display: inline-block;
+  vertical-align: top;
+  margin: 20px 30px;
+  text-align: center;
+  width: 100px;
+  cursor: pointer;
+}
+#configuration li input {
+  display: none;
+}
+#configuration li img {
+  height: 80px;
+  margin-top: 5px;
+}
+#configuration li h5 {
+  background-color: #3c485c;
+  color: white;
+  font-weight: normal;
+  margin: 10px 0 0 0;
+  height: 25px;
+  line-height: 25px;
+  position: relative;
+}
+#configuration li h5 span {
+  font-size: 12px;
+  margin-left: 3px;
+}
+#configuration li:hover {
+  box-shadow: 0px 0px 2px #3c485c;
+}
+#configuration li.checked {
+  box-shadow: 0px 0px 2px #3c485c;
+}
+#configuration li.checked h5::before {
+  content: '';
+  width: 15px;
+  height: 15px;
+  background-size: 15px 15px;
+  background-image: url(../img/icon/checked.png);
+  display: inline-block;
+  position: absolute;
+  right: 0;
+  top: -15px;
+}
+#action {
+  text-align: center;
+  margin-top: 20px;
+}
+#build {
+  color: #FFF;
+  font-size: 30px;
+  background-color: #37A982;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: 5px 20px;
+}
+#build:hover {
+  background-color: #41D09F;
+}
+footer {
+  margin-top: 50px;
+}

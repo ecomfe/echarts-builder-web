@@ -1,94 +1,144 @@
 <!Doctype html>
 <html>
 <head>
-    <title>ECharts 在线构建工具</title>
+    <title>ECharts 在线构建</title>
     <meta charset="utf-8" />
     <script src="lib/jquery.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/index.css">
 </head>
 <body>
-    
-    <div id="main">
-        <button id="build">生 成</button>
-        <form id="configuration">
-            <div id="charts">
-                <h3>图表</h3>
-                <ul>
-                    <li>
-                        <input type="checkbox" name="bar">
-                        <label for="force">柱状图</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" name="line">
-                        <label for="line">折线图</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" name="pie">
-                        <label for="pie">饼图</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" name="radar">
-                        <label for="radar">雷达图</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" name="scatter">
-                        <label for="scatter">散点图</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" name="k">
-                        <label for="k">K 线图</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" name="map">
-                        <label for="map">地图</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" name="chord">
-                        <label for="chord">和弦图</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" name="force">
-                        <label for="force">力导向图</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" name="gauge">
-                        <label for="gauge">仪表盘</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" name="funnel">
-                        <label for="funnel">漏斗图</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" name="eventRiver">
-                        <label for="eventRiver">事件河流图</label>
-                    </li>
-                </ul>
-            </div>
-            <div id="components">
-                <h3>组件</h3>
-                <ul>
-                    <li>
-                        <input type="checkbox" name="dataRange">
-                        <label for="dataRange">值域漫游</label>
-                    </li>
-                </ul>
-            </div>
-            <div id="compress">
-                <input type="checkbox" name="compress" checked="checked">
-                <label for="compress">代码压缩</label>
-            </div>
-            <div id="amd">
-                <input type="checkbox" name="amd" checked="checked">
-                <label for="amd">AMD</label>
-            </div>
-            <div id="dev">
-                <input type="checkbox" name="dev">
-                <label for="dev">开发版本</label>
-            </div>
-        </form>
-    </div>
+    <header id="header">
+        <h1>ECharts</h1>
 
+        <nav calss="nav">
+            <ul>
+                <li><a target="_blank" href="http://echarts.baidu.com/doc/doc.html">Doc</a></li>
+                <li><a target="_blank" href="http://echarts.baidu.com/doc/example.html">Example</a></li>
+                <!--
+                <li><a target="_blank" href="http://echarts.baidu.com/doc/doc.html">Tools</a></li>
+                -->
+                <li><a target="_blank" href="https://github.com/ecomfe/echarts/issues">Q&A</a></li>
+                <li><a target="_blank" href="http://echarts.baidu.com/doc/about.html">About</a></li>
+            </ul>    
+        </nav>
+    </header>
+    <main id="main">
+        <h1>ECharts 在线构建</h1>
+        <div id="configuration">
+            <section id="charts">
+                <h3>图表<span>chart</span></h3>
+                <ul>
+                    <li class="checked">
+                        <img src="img/icon/chart/bar.png">
+                        <input type="checkbox" name="bar">
+                        <h5>柱状图 <span>Bar</span></h5>
+                    </li>
+                    <li class="checked">
+                        <img src="img/icon/chart/line.png">
+                        <input type="checkbox" name="line">
+                        <h5>折线图 <span>Line</span></h5>
+                    </li>
+                    <li class="checked">
+                        <img src="img/icon/chart/pie.png">
+                        <input type="checkbox" name="pie">
+                        <h5>饼图 <span>Pie</span></h5>
+                    </li>
+                    <li>
+                        <img src="img/icon/chart/radar.png">
+                        <input type="checkbox" name="radar">
+                        <h5>雷达图 <span>Radar</span></h5>
+                    </li>
+                    <li>
+                        <img src="img/icon/chart/scatter.png">
+                        <input type="checkbox" name="scatter">
+                        <h5>散点图 <span>Scatter</span></h5>
+                    </li>
+                    <li>
+                        <img src="img/icon/chart/k.png">
+                        <input type="checkbox" name="k">
+                        <h5>K 线图 <span>K</span></h5>
+                    </li>
+                    <li>
+                        <img src="img/icon/chart/map.png">
+                        <input type="checkbox" name="map">
+                        <h5>地图 <span>Map</span></h5>
+                    </li>
+                    <li>
+                        <img src="img/icon/chart/chord.png">
+                        <input type="checkbox" name="chord">
+                        <h5>和弦图 <span>Chord</span></h5>
+                    </li>
+                    <li>
+                        <img src="img/icon/chart/force.png">
+                        <input type="checkbox" name="force">
+                        <h5>力导向图 <span>Force</span></h5>
+                    </li>
+                    <li>
+                        <img src="img/icon/chart/gauge.png">
+                        <input type="checkbox" name="gauge">
+                        <h5>仪表盘 <span>Gauge</span></h5>
+                    </li>
+                    <li>
+                        <img src="img/icon/chart/funnel.png">
+                        <input type="checkbox" name="funnel">
+                        <h5>漏斗图 <span>Funnel</span></h5>
+                    </li>
+                </ul>
+            </section>
+            <section id="components">
+                <h3>组件<span>component</span></h3>
+                <ul>
+                <!--
+                    <li>
+                        <img src="img/icon/component/data-range.png">
+                        <input type="checkbox" name="funnel">
+                        <h5>值域漫游</h5>
+                    </li>
+                -->
+                </ul>
+            </section>
+            <section>
+                <h3>其它选项<span>other</span></h3>
+                <div id="compress">
+                    <input type="checkbox" name="compress" checked="checked">
+                    <label for="compress">代码压缩</label>
+                </div>
+                <div id="amd">
+                    <input type="checkbox" name="amd" checked="checked">
+                    <label for="amd">AMD</label>
+                </div>
+                <div id="dev">
+                    <input type="checkbox" name="dev">
+                    <label for="dev">开发版本</label>
+                </div>
+            </section>
+        </div>
+        <div id="action">
+            <button id="build">生 成</button>
+        </div>
+    </main>
+
+    <footer>
+    </footer>
 
     <script>
+
+        function updateCheckbox() {
+            $('#charts input, #components input').each(function () {
+                $(this).attr('checked', $(this).parent().hasClass('checked'));
+            })
+        }
+
+        $('#charts li, #components li').click(function () {
+            $(this).toggleClass('checked');
+
+            updateCheckbox();
+        });
+
+        updateCheckbox();
+
+        // Build
         $("#build").click(function () {
             var charts = [];
             $('#charts input:checked').each(function () {
