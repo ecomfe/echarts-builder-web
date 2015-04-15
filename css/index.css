@@ -58,6 +58,9 @@ main h1 {
   color: #3c485c;
   font-weight: normal;
 }
+#configuration p.desc {
+  color: #888;
+}
 #configuration > section {
   border-bottom: 1px solid #e5e5e5;
   margin-top: 40px;
@@ -92,7 +95,8 @@ main h1 {
   background-color: #3c485c;
   color: white;
   font-weight: normal;
-  margin: 10px 0 0 0;
+  margin: 0;
+  padding: 0;
   height: 25px;
   line-height: 25px;
   position: relative;
@@ -102,10 +106,10 @@ main h1 {
   margin-left: 3px;
 }
 #configuration li:hover {
-  box-shadow: 0px 0px 2px #3c485c;
+  box-shadow: 0px 0px 2px #5E864B;
 }
 #configuration li.checked {
-  box-shadow: 0px 0px 2px #3c485c;
+  box-shadow: 0px 0px 2px #5E864B;
 }
 #configuration li.checked h5::before {
   content: '';
@@ -116,7 +120,14 @@ main h1 {
   display: inline-block;
   position: absolute;
   right: 0;
-  top: -15px;
+  top: -98px;
+}
+#other p.desc {
+  font-size: 14px;
+  padding-left: 10px;
+}
+#other a {
+  color: black;
 }
 #action {
   text-align: center;

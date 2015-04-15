@@ -83,6 +83,10 @@ main {
 
 #configuration {
 
+    p.desc {
+        color: #888;
+    }
+
     &>section {
         border-bottom: 1px solid #e5e5e5;
         margin-top: 40px;
@@ -127,7 +131,8 @@ main {
                 font-size: 12px;
                 margin-left: 3px;
             }
-            margin: 10px 0 0 0;
+            margin: 0;
+            padding: 0;
 
             height: 25px;
             line-height: 25px;
@@ -136,11 +141,11 @@ main {
         }
 
         &:hover {
-            box-shadow: 0px 0px 2px #3c485c;
+            box-shadow: 0px 0px 2px #5E864B;
         }
 
         &.checked {
-            box-shadow: 0px 0px 2px #3c485c;
+            box-shadow: 0px 0px 2px #5E864B;
 
             h5::before {
                 content: '';
@@ -151,9 +156,20 @@ main {
                 display: inline-block;
                 position: absolute;
                 right: 0;
-                top: -15px;
+                top: -98px;
             }
         }
+    }
+}
+
+#other {
+    p.desc {
+        font-size: 14px;
+        padding-left: 10px;
+    }
+
+    a {
+        color: black;
     }
 }
 

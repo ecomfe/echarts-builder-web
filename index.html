@@ -3,33 +3,34 @@
 <head>
     <title>ECharts 在线构建</title>
     <meta charset="utf-8" />
-    <script src="lib/jquery.js"></script>
-
     <link rel="stylesheet" type="text/css" href="css/index.css">
 </head>
 <body>
     <header id="header">
         <div class="logo">
-            <img src="img/logo.png" />
+            <a href="//echarts.baidu.com" target="_blank">
+                <img src="img/logo.png" />
+            </a>
             <h1>ECharts</h1>
         </div>
+        <!--
         <nav calss="nav">
             <ul>
                 <li><a target="_blank" href="http://echarts.baidu.com/doc/doc.html">Doc</a></li>
                 <li><a target="_blank" href="http://echarts.baidu.com/doc/example.html">Example</a></li>
-                <!--
                 <li><a target="_blank" href="http://echarts.baidu.com/doc/doc.html">Tools</a></li>
-                -->
                 <li><a target="_blank" href="https://github.com/ecomfe/echarts/issues">Q&A</a></li>
                 <li><a target="_blank" href="http://echarts.baidu.com/doc/about.html">About</a></li>
-            </ul>    
+            </ul>
         </nav>
+        -->
     </header>
     <main id="main">
         <h1>ECharts 在线构建</h1>
         <div id="configuration">
             <section id="charts">
                 <h3>图表<span>chart</span></h3>
+                <p class="desc">选择你要打包的图表</p>
                 <ul>
                     <li class="checked">
                         <img src="img/icon/chart/bar.png">
@@ -90,27 +91,31 @@
             </section>
             <section id="components">
                 <h3>组件<span>component</span></h3>
+                <p class="desc">选择你要打包的组件</p>
                 <ul>
                     <li>
                         <img src="img/icon/component/data-range.png">
-                        <input type="checkbox" name="funnel">
+                        <input type="checkbox" name="dataRange">
                         <h5>值域漫游</h5>
                     </li>
                 </ul>
             </section>
-            <section>
+            <section id="other">
                 <h3>其它选项<span>other</span></h3>
                 <p>
                     <input type="checkbox" id="compress" name="compress" checked="checked">
                     <label for="compress">代码压缩</label>
+                    <p class="desc">是否使用 UglifyJS 压缩打包后的代码</p>
                 </p>
                 <p>
                     <input type="checkbox" id="amd" name="amd">
-                    <label for="amd">AMD</label>
+                    <label for="amd">AMD 模块</label>
+                    <p class="desc">是否打包成 AMD 标准的模块，AMD 标准的模块需要使用 <a target="_blank" href="//github.com/ecomfe/esl">esl</a> 或者 <a target="_blank" href="//requirejs.org">RequireJS</a> 加载。</p>
                 </p>
                 <p>
                     <input type="checkbox" id="dev" name="dev">
                     <label for="dev">开发版本</label>
+                    <p class="desc">开发版本使用 <a target="_blank" href="https://github.com/ecomfe/echarts">GitHub Master</a> 上最新的代码。否则使用最新的 <a target="_blank" href="https://github.com/ecomfe/echarts/releases">Release</a> 版本的代码</p>
                 </p>
             </section>
         </div>
@@ -122,6 +127,7 @@
     <footer>
     </footer>
 
+    <script src="lib/jquery.js"></script>
     <script>
 
         function updateCheckbox() {
