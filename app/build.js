@@ -1,19 +1,32 @@
 define(function (require) {
 
-    var echartsPackageMainCode = 'define(\'echarts\', [\'echarts/echarts\'], function (echarts) { return echarts;});\n';
-    var zrenderPackageMainCode = 'define(\'zrender\', [\'zrender/zrender\'], function (zrender) { return zrender;});\n';
 
     var etpl =require('../lib/etpl');
-    etpl.config({
-        commandOpen: '/**',
-        commandClose: '*/'
-    });
+    var saveAs = require('../lib/FileSaver');
 
     var amdCode = require('text!../chunk/amd.js');
     var startWrapperCode = require('text!../chunk/start.js');
     var endWrapperCode = require('text!../chunk/end.js');
 
-    var saveAs = require('../lib/FileSaver');
+    var echartsPackageMainCode = 'define(\'echarts\', [\'echarts/echarts\'], function (echarts) { return echarts;});\n';
+    var zrenderPackageMainCode = 'define(\'zrender\', [\'zrender/zrender\'], function (zrender) { return zrender;});\n';
+
+    etpl.config({
+        commandOpen: '/**',
+        commandClose: '*/'
+    });
+
+    var $log = document.getElementById('log');
+
+    function builderLog (msg) {
+        $log.innerHTML += msg + '<br />';
+        $log.scrollTop = $log.scrollHeight;
+    }
+
+    esl.onModuleLoad = function (moduleId) {
+        // echarts/zrender module
+        builderLog('Loaded module: "' + moduleId + '"');
+    }
 
     function jsCompress(source) {
         var ast = UglifyJS.parse(source);
@@ -72,6 +85,8 @@ define(function (require) {
             return ['define(\'', moduleInfo.id, '\', [', deps.join(', '), '], ', factoryCode, ');\n'].join('');
         }
 
+        builderLog('<br />Assembling code...');
+
         for (var id in esl.modules) {
             var moduleInfo = esl.modules[id];
             // Not a echarts/zrender module
@@ -92,36 +107,47 @@ define(function (require) {
             });
             code = startWrapperCode + amdCode + code + endWrapperCode;
         }
+
+
         if (! BUILD_CONFIG.source) {
-            code = jsCompress(code);
+            builderLog('<br />Compressing code...');
         }
 
+        setTimeout(compressAndDownload);
 
-        var blob = new Blob([code], {
-            type: 'text/plain;charset=utf8'
-        });
+        function compressAndDownload() {
+            if (! BUILD_CONFIG.source) {
+                code = jsCompress(code);
+            }
 
-        // var URL = window.URL || window.webkitURL;
-        // var scriptUrl = URL.createObjectURL(blob);
+            var blob = new Blob([code], {
+                type: 'text/plain;charset=utf8'
+            });
 
-        // URL.revokeObjectURL(blob);
+            // var URL = window.URL || window.webkitURL;
+            // var scriptUrl = URL.createObjectURL(blob);
 
-        // window.open(scriptUrl);
-        
-        var fileName = ['echarts'];
-        if (BUILD_CONFIG.amd) {
-            fileName.push('amd');
+            // URL.revokeObjectURL(blob);
+
+            // window.open(scriptUrl);
+
+            var fileName = ['echarts'];
+            if (BUILD_CONFIG.amd) {
+                fileName.push('amd');
+            }
+            if (BUILD_CONFIG.source) {
+                fileName.push('source');
+            }
+            fileName.push('js');
+            saveAs(blob, fileName.join('.'));
+
+            builderLog('<br />Completed');
+
+            // setTimeout(function () {
+            //     window.close();
+            // }, 3000);
+
+            document.getElementById('tip').innerHTML = '构建完毕';
         }
-        if (BUILD_CONFIG.source) {
-            fileName.push('source');
-        }
-        fileName.push('js');
-        saveAs(blob, fileName.join('.'));
-
-        setTimeout(function () {
-            window.close();
-        }, 3000);
-
-        document.getElementById('tip').innerHTML = '构建完毕';
     });
 });

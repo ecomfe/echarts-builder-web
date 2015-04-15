@@ -4,12 +4,30 @@
     <meta charset="utf-8" />
     <script src="lib/esl.js"></script>
     <script src="lib/uglify.js"></script>
+
+    <style type="text/css">
+        body {
+            margin: 0;
+            text-align: center;
+        }
+        #log {
+            height: 500px;
+            overflow-y: scroll;
+
+            width: 600px;
+            text-align: left;
+            margin: 0 auto;
+
+            line-height: 18px;
+        }
+    </style>
 </head>
 <body>
 
-    <h1 style="text-align:center;" id="tip">
+    <h1 id="tip">
         代码构建中....
     </h1>
+    <div id="log"></div>
 
     <script>
 
