@@ -1,7 +1,13 @@
+@font-face {
+    font-family: 'Noto Thin';
+    src: url('font/noto-thin.min.ttf');
+}
+
 body {
     margin: 0px;
     
     text-align: center;
+    font-family: 'Noto Thin';
 }
 
 li {
@@ -18,13 +24,22 @@ header {
     background-color: #3c485c;
     text-align: left;
 
-    h1 {
-        color: white;
-        margin: 0px 30px;
-        padding: 0px;
-        line-height: 80px;
+    .logo {
+        display: inline-block;
+        img {
+            height: 30px;
+            margin: 20px 30px;
+            display: inline-block;
+        }
+        h1 {
+            // color: white;
+            // margin: 0px 30px;
+            // padding: 0px;
+            // line-height: 80px;
+            // float: left;
 
-        float: left;
+            display: none;
+        }
     }
 
     nav {
@@ -89,7 +104,7 @@ main {
     li {
         display: inline-block;
         vertical-align: top;
-        margin: 20px 30px;
+        margin: 20px 28px;
 
         text-align: center;
         width: 100px;
@@ -101,7 +116,6 @@ main {
         }
 
         img {
-            height: 80px;
             margin-top: 5px;
         }
 
@@ -150,13 +164,15 @@ main {
 
 #build {
     color: #FFF;
-    font-size: 30px;
+    font-size: 26px;
     background-color: #3c485c;
     border-radius: 10px;
     border: none;
     cursor: pointer;
     outline: none;
-    padding: 5px 20px;
+    padding: 5px 50px;
+
+    font-family: 'Noto Thin';
 
     &:hover {
         background-color: #596A86;

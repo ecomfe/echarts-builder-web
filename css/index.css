@@ -1,6 +1,11 @@
+@font-face {
+  font-family: 'Noto Thin';
+  src: url('font/noto-thin.min.ttf');
+}
 body {
   margin: 0px;
   text-align: center;
+  font-family: 'Noto Thin';
 }
 li {
   list-style: none;
@@ -14,12 +19,16 @@ header {
   background-color: #3c485c;
   text-align: left;
 }
-header h1 {
-  color: white;
-  margin: 0px 30px;
-  padding: 0px;
-  line-height: 80px;
-  float: left;
+header .logo {
+  display: inline-block;
+}
+header .logo img {
+  height: 30px;
+  margin: 20px 30px;
+  display: inline-block;
+}
+header .logo h1 {
+  display: none;
 }
 header nav {
   float: right;
@@ -68,7 +77,7 @@ main h1 {
 #configuration li {
   display: inline-block;
   vertical-align: top;
-  margin: 20px 30px;
+  margin: 20px 28px;
   text-align: center;
   width: 100px;
   cursor: pointer;
@@ -77,7 +86,6 @@ main h1 {
   display: none;
 }
 #configuration li img {
-  height: 80px;
   margin-top: 5px;
 }
 #configuration li h5 {
@@ -116,13 +124,14 @@ main h1 {
 }
 #build {
   color: #FFF;
-  font-size: 30px;
+  font-size: 26px;
   background-color: #3c485c;
   border-radius: 10px;
   border: none;
   cursor: pointer;
   outline: none;
-  padding: 5px 20px;
+  padding: 5px 50px;
+  font-family: 'Noto Thin';
 }
 #build:hover {
   background-color: #596A86;
