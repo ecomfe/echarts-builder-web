@@ -404,5 +404,85 @@ define(function(require) {
     Graph.Node = Node;
     Graph.Edge = Edge;
 
+    /**
+     * 从邻接矩阵生成
+     * ```
+     *        TARGET
+     *    -1--2--3--4--5-
+     *  1| x  x  x  x  x
+     *  2| x  x  x  x  x
+     *  3| x  x  x  x  x  SOURCE
+     *  4| x  x  x  x  x
+     *  5| x  x  x  x  x
+     * ```
+     * 节点的行列总和会被写到`node.data.value`
+     * 对于有向图会计算每一行的和写到`node.data.outValue`,
+     * 计算每一列的和写到`node.data.inValue`。
+     * 边的权重会被然后写到`edge.data.weight`。
+     * 
+     * @method module:echarts/data/Graph.fromMatrix
+     * @param {Array.<Object>} nodesData 节点信息，必须有`id`属性, 会保存到`node.data`中
+     * @param {Array} matrix 邻接矩阵
+     * @param {boolean} directed 是否是有向图
+     * @return {module:echarts/data/Graph}
+     */
+    Graph.fromMatrix = function(nodesData, matrix, directed) {
+        if (
+            !matrix || !matrix.length
+            || (matrix[0].length !== matrix.length)
+            || (nodesData.length !== matrix.length)
+        ) {
+            // Not a valid data
+            return;
+        }
+
+        var size = matrix.length;
+        var graph = new Graph(directed);
+
+        for (var i = 0; i < size; i++) {
+            var node = graph.addNode(nodesData[i].id, nodesData[i]);
+            // TODO
+            // node.data已经有value的情况
+            node.data.value = 0;
+            if (directed) {
+                node.data.outValue = node.data.inValue = 0;
+            }
+        }
+        for (var i = 0; i < size; i++) {
+            for (var j = 0; j < size; j++) {
+                var item = matrix[i][j];
+                if (directed) {
+                    graph.nodes[i].data.outValue += item;
+                    graph.nodes[j].data.inValue += item;
+                }
+                graph.nodes[i].data.value += item;
+                graph.nodes[j].data.value += item;
+            }
+        }
+
+        for (var i = 0; i < size; i++) {
+            for (var j = i; j < size; j++) {
+                var item = matrix[i][j];
+                if (item === 0) {
+                    continue;
+                }
+                var n1 = graph.nodes[i];
+                var n2 = graph.nodes[j];
+                var edge = graph.addEdge(n1, n2, {});
+                edge.data.weight = item;
+                if (i !== j) {
+                    if (directed && matrix[j][i]) {
+                        var inEdge = graph.addEdge(n2, n1, {});
+                        inEdge.data.weight = matrix[j][i];
+                    }
+                }
+            }
+        }
+
+        // console.log(graph.edges.map(function (e) {return e.node1.id + '-' + e.node2.id;}))
+
+        return graph;
+    };
+
     return Graph;
 });

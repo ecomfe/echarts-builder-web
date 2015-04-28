@@ -44,11 +44,11 @@ define(function (require) {
     }
 
     var hasMap = false;
+    console.log(BUILD_CONFIG.charts);
     // Including charts
     var charts = (BUILD_CONFIG.charts || '').split(',').filter(function (chart) {
         return chart;
     }).map(function (chart) {
-        chart = chart.toLowerCase();
         if (chart === 'map') {
             hasMap = true;
         }
