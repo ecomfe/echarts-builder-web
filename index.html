@@ -177,12 +177,12 @@
         // Build
         $("#build").click(function () {
             var charts = [];
-            $('#charts input:checked').each(function () {
+            $('#charts .checked input').each(function () {
                 charts.push($(this).attr('name'));
             });
 
             var components = [];
-            $('#components input:checked').each(function () {
+            $('#components .checked input').each(function () {
                 components.push($(this).attr('name'));
             });
 
