@@ -1,0 +1,221 @@
+<!Doctype html>
+<html>
+<head>
+    <title>ECharts3 在线构建</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="css/echarts3.css">
+</head>
+<body>
+    <header id="header">
+        <div class="logo">
+            <a href="//echarts.baidu.com" target="_blank">
+                <img src="img/echarts3.png" />
+            </a>
+        </div>
+    </header>
+    <main id="main">
+        <h1>ECharts 3.0 下载</h1>
+        <div id="configuration">
+            <section id="charts">
+                <h3>图表<span>chart</span></h3>
+                <p class="desc">选择要打包的图表</p>
+                <ul>
+                    <li class="checked">
+                        <img src="img/icon3/chart/bar.svg">
+                        <input type="checkbox" name="bar">
+                        <h5>柱状图 <span>Bar</span></h5>
+                    </li>
+                    <li class="checked">
+                        <img src="img/icon3/chart/line.svg">
+                        <input type="checkbox" name="line">
+                        <h5>折线图 <span>Line</span></h5>
+                    </li>
+                    <li class="checked">
+                        <img src="img/icon3/chart/pie.svg">
+                        <input type="checkbox" name="pie">
+                        <h5>饼图 <span>Pie</span></h5>
+                    </li>
+                    <li>
+                        <img src="img/icon3/chart/scatter.svg">
+                        <input type="checkbox" name="scatter">
+                        <h5>散点图 <span>Scatter</span></h5>
+                    </li>
+                    <li>
+                        <img src="img/icon3/chart/radar.svg">
+                        <input type="checkbox" name="radar">
+                        <h5>雷达图 <span>Radar</span></h5>
+                    </li>
+                    <li>
+                        <img src="img/icon3/chart/map.svg">
+                        <input type="checkbox" name="map">
+                        <h5>地图 <span>Map</span></h5>
+                    </li>
+                    <li>
+                        <img src="img/icon3/chart/force.svg">
+                        <input type="checkbox" name="graph">
+                        <h5>关系图 <span>Graph</span></h5>
+                    </li>
+                    <li>
+                        <img src="img/icon3/chart/treemap.svg">
+                        <input type="checkbox" name="treemap">
+                        <h5>Treemap</h5>
+                    </li>
+                    <li>
+                        <img src="img/icon3/chart/parallel.svg">
+                        <input type="checkbox" name="parallel">
+                        <h5>平行坐标</h5>
+                    </li>
+                    <li>
+                        <img src="img/icon3/chart/gauge.svg">
+                        <input type="checkbox" name="gauge">
+                        <h5>仪表盘 <span>Gauge</span></h5>
+                    </li>
+                    <li>
+                        <img src="img/icon3/chart/funnel.svg">
+                        <input type="checkbox" name="funnel">
+                        <h5>漏斗图 <span>Funnel</span></h5>
+                    </li>
+                </ul>
+            </section>
+            <section id="coords">
+                <h3>坐标系<span>coordinate systems</h3>
+                <p class="desc">选择要打包的坐标系，有些图表像散点图，折线图可以被应用到多个坐标系上</p>
+                <ul>
+                    <li class="checked">
+                        <img src="img/icon3/component/grid.svg">
+                        <input type="checkbox" name="grid">
+                        <h5>直角坐标系</h5>
+                    </li>
+                    <li>
+                        <img src="img/icon3/component/polar.svg">
+                        <input type="checkbox" name="polar">
+                        <h5>极坐标系</h5>
+                    </li>
+                    <li>
+                        <img src="img/icon3/component/geo.svg">
+                        <input type="checkbox" name="geo">
+                        <h5>地理坐标系</h5>
+                    </li>
+                </ul>
+            </section>
+            <section id="components">
+                <h3>组件<span>component</span></h3>
+                <p class="desc">选择要打包的组件</p>
+                <ul>
+                    <li class="checked">
+                        <img src="img/icon3/component/title.svg">
+                        <input type="checkbox" name="title">
+                        <h5>标题 <span>Title</span></h5>
+                    </li>
+                    <li class="checked">
+                        <img src="img/icon3/component/legend.svg">
+                        <input type="checkbox" name="legend">
+                        <h5>图例 <span>Legend</span></h5>
+                    </li>
+                    <li class="checked">
+                        <img src="img/icon3/component/tooltip.svg">
+                        <input type="checkbox" name="tooltip">
+                        <h5>提示框 <span>Tooltip</span></h5>
+                    </li>
+                    <li>
+                        <img src="img/icon3/component/markPoint.svg">
+                        <input type="checkbox" name="markPoint">
+                        <h5>标注 <span>markPoint</span></h5>
+                    </li>
+                    <li>
+                        <img src="img/icon3/component/markLine.svg">
+                        <input type="checkbox" name="markLine">
+                        <h5>标线 <span>markLine</span></h5>
+                    </li>
+                    <li>
+                        <img src="img/icon3/component/dataZoom.svg">
+                        <input type="checkbox" name="dataZoom">
+                        <h5>dataZoom</h5>
+                    </li>
+                    <li>
+                        <img src="img/icon3/component/dataRange.svg">
+                        <input type="checkbox" name="dataRange">
+                        <h5>dataRange</h5>
+                    </li>
+                </ul>
+            </section>
+            <section id="other">
+                <h3>其它选项<span>other</span></h3>
+                <div class="other-option">
+                    <input type="checkbox" id="vml" name="vml" checked="checked">
+                    <label for="vml">兼容 IE8</label>
+                    <p class="desc">是否包括对 IE8 的兼容代码</p>
+                </div>
+                <div class="other-option">
+                    <input type="checkbox" id="compress" name="compress" checked="checked">
+                    <label for="compress">代码压缩</label>
+                    <p class="desc">是否使用 UglifyJS 压缩后的代码</p>
+                </div>
+            </section>
+        </div>
+        <div id="action">
+            <button id="build">生 成</button>
+        </div>
+    </main>
+
+    <footer>
+    </footer>
+
+    <script src="lib/jquery.js"></script>
+    <script>
+
+        function updateCheckbox() {
+            $('#charts input, #components input, #coords input').each(function () {
+                $(this).attr('checked', $(this).parent().hasClass('checked'));
+            });
+        }
+
+        $('#charts li, #components li, #coords li').click(function () {
+            $(this).toggleClass('checked');
+
+            updateCheckbox();
+        });
+
+        updateCheckbox();
+
+        // Build
+        $("#build").click(function () {
+            var charts = [];
+            $('#charts .checked input').each(function () {
+                charts.push($(this).attr('name'));
+            });
+
+            var components = [];
+            $('#coords .checked input').each(function () {
+                components.push($(this).attr('name'));
+            });
+            $('#components .checked input').each(function () {
+                components.push($(this).attr('name'));
+            });
+
+            var url = 'build-echarts3.html?charts=' + charts.join(',') + '&components=' + components.join(',');
+
+            if (!$('#compress').prop('checked')) {
+                url += '&source=true';
+            }
+            if ($('#vml').prop('checked')) {
+                url += '&vml=true';
+            }
+
+            url += '&version=3';
+            url += '&dev=true';
+
+            window.open(url);
+        });
+    </script>
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?4bad1df23f079e0d12bdbef5e65b072f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+</body>
+<body>

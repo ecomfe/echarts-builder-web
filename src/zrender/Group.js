@@ -102,7 +102,7 @@ define(function(require) {
         if (child == this) {
             return;
         }
-        
+
         if (child.parent == this) {
             return;
         }
@@ -114,7 +114,7 @@ define(function(require) {
         child.parent = this;
 
         if (this._storage && this._storage !== child._storage) {
-            
+
             this._storage.addToMap(child);
 
             if (child instanceof Group) {
@@ -137,7 +137,7 @@ define(function(require) {
         child.parent = null;
 
         if (this._storage) {
-            
+
             this._storage.delFromMap(child.id);
 
             if (child instanceof Group) {

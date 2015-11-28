@@ -1,0 +1,158 @@
+@font-face {
+  font-family: 'Noto Thin';
+  src: url('font/noto-thin.min.ttf');
+}
+body {
+  margin: 0px;
+  text-align: center;
+  font-family: 'Noto Thin';
+}
+li {
+  list-style: none;
+}
+ul {
+  margin: 0px;
+  padding: 0px;
+}
+header {
+  height: 50px;
+  background-color: #293c55;
+  text-align: left;
+}
+header .logo {
+  display: inline-block;
+}
+header .logo img {
+  height: 22px;
+  margin: 13px 30px;
+  display: inline-block;
+}
+header .logo h1 {
+  display: none;
+}
+header nav {
+  float: right;
+  margin-right: 50px;
+  padding: 30px 0px;
+}
+header nav li {
+  display: inline-block;
+  height: 20px;
+  padding: 0px 20px;
+  border-right: 1px solid #728d98;
+}
+header nav li a {
+  color: white;
+  text-decoration: none;
+}
+header nav li a:hover {
+  text-decoration: underline;
+}
+main {
+  width: 1000px;
+  margin: 0px auto;
+  text-align: left;
+}
+main h1 {
+  text-align: center;
+  color: #3c485c;
+  font-weight: normal;
+}
+#configuration p.desc {
+  color: #888;
+}
+#configuration > section {
+  border-bottom: 1px solid #e5e5e5;
+  margin-top: 40px;
+}
+#configuration h3 {
+  color: #3c485c;
+  font-size: 26px;
+  font-weight: normal;
+}
+#configuration h3 span {
+  font-size: 16px;
+  margin-left: 5px;
+}
+#configuration ul {
+  margin: 10px;
+}
+#configuration li {
+  display: inline-block;
+  vertical-align: top;
+  margin: 20px 28px;
+  text-align: center;
+  width: 100px;
+  cursor: pointer;
+  transition: box-shadow 0.4s;
+}
+#configuration li input {
+  display: none;
+}
+#configuration li img {
+  margin-top: 5px;
+  width: 90px;
+  height: 90px;
+}
+#configuration li h5 {
+  background-color: #293c55;
+  color: white;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+  height: 25px;
+  line-height: 25px;
+  position: relative;
+}
+#configuration li h5 span {
+  font-size: 12px;
+  margin-left: 3px;
+}
+#configuration li:hover {
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+#configuration li.checked {
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+#configuration li.checked h5::before {
+  content: '';
+  width: 15px;
+  height: 15px;
+  background-size: 15px 15px;
+  background-image: url(../img/icon/checked.png);
+  display: inline-block;
+  position: absolute;
+  right: 0;
+  top: -102px;
+}
+#other p.desc {
+  font-size: 14px;
+  padding-left: 10px;
+}
+#other a {
+  color: black;
+}
+#other .other-option {
+  margin-left: 15px;
+}
+#action {
+  text-align: center;
+  margin-top: 20px;
+}
+#build {
+  color: #FFF;
+  font-size: 26px;
+  background-color: #293c55;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: 5px 50px;
+  font-family: 'Noto Thin';
+}
+#build:hover {
+  background-color: #596A86;
+}
+footer {
+  margin-top: 50px;
+}

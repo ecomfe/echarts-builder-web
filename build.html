@@ -45,14 +45,18 @@
             }
         }
 
+        BUILD_CONFIG.version = +BUILD_CONFIG.version || 2;
+
+        var postfix = (BUILD_CONFIG.dev ? '-dev' : '') + (BUILD_CONFIG.version === 2 ? '' : '-' + BUILD_CONFIG.version);
+
         require.config({
             packages: [{
                 name: 'zrender',
-                location: 'src/zrender' + (BUILD_CONFIG.dev ? '-dev' : ''),
+                location: 'src/zrender' + postfix,
                 main: 'zrender'
             }, {
                 name: 'echarts',
-                location: 'src/echarts' + (BUILD_CONFIG.dev ? '-dev' : ''),
+                location: 'src/echarts' + postfix,
                 main: 'echarts'
             }]
         });

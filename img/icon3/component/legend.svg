@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="600px" height="600px" viewBox="0 0 600 600" enable-background="new 0 0 600 600" xml:space="preserve">
+<line fill="none" stroke="#293C54" stroke-width="10" stroke-miterlimit="10" x1="64.807" y1="376.145" x2="287.685" y2="376.145"/>
+<line fill="#FFFFFF" stroke="#C23531" stroke-width="10" stroke-miterlimit="10" x1="64.06" y1="207.519" x2="286.938" y2="207.519"/>
+<path fill="#FFFFFF" stroke="#C23531" stroke-width="10" stroke-miterlimit="10" d="M223.426,207.513
+	c0,26.448-21.457,47.929-47.919,47.929c-26.47,0-47.935-21.48-47.935-47.929c0-26.451,21.464-47.916,47.935-47.916
+	C201.969,159.597,223.426,181.062,223.426,207.513z"/>
+<polygon fill="#FFFFFF" stroke="#293C54" stroke-width="10" stroke-miterlimit="10" points="175.501,421.211 123.46,421.211 
+	149.48,376.145 175.501,331.075 201.52,376.145 227.539,421.211 "/>
+<text transform="matrix(1 0 0 1 373.7578 223.7012)" fill="#C23531" font-family="'NotoSansCJKsc-Bold-GBpc-EUC-H'" font-size="47.7782">图例一</text>
+<text transform="matrix(1 0 0 1 373.7578 394.9121)" fill="#293C54" font-family="'NotoSansCJKsc-Bold-GBpc-EUC-H'" font-size="47.7782">图例二</text>
+</svg>
