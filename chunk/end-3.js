@@ -5,11 +5,15 @@ echarts.number = require('echarts/util/number');
 echarts.format = require('echarts/util/format');
 
 /** for: ${charts} as ${chart} */
-require("${chart}");
+require('${chart}');
 /** /for */
 /** for: ${components} as ${component} */
-require("${component}");
+require('${component}');
 /** /for */
 exports['echarts'] = echarts;
+
+/** if: ${vml} */
+require('zrender/vml/vml');
+/** /if */
 
 }));

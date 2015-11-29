@@ -1,3 +1,13 @@
+/*!
+ * ECharts, a javascript interactive chart library.
+ *
+ * Copyright (c) 2015, Baidu Inc.
+ * All rights reserved.
+ *
+ * LICENSE
+ * https://github.com/ecomfe/echarts/blob/master/LICENSE.txt
+ */
+
 /**
  * @module echarts
  */
@@ -346,7 +356,7 @@ define(function (require) {
      * @param {boolean} [silent=false] Whether trigger event.
      * @param {number} [payload.from] From uid
      */
-    echartsProto.dispatch = function (payload, silent) {
+    echartsProto.dispatchAction = function (payload, silent) {
         var actionWrap = actions[payload.type];
         if (actionWrap) {
             var actionInfo = actionWrap.actionInfo;
@@ -702,7 +712,7 @@ define(function (require) {
                         var otherChart = instances[id];
                         if (otherChart !== chart && otherChart.group === chart.group) {
                             if (!otherChart.__connectedActionDispatching) {
-                                otherChart.dispatch(action);
+                                otherChart.dispatchAction(action);
                             }
                         }
                     }

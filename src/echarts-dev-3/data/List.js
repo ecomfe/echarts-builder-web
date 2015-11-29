@@ -908,8 +908,9 @@ define(function (require) {
         child.dataIndex = this.dataIndex;
     };
     /**
+     * Set graphic element relative to data. It can be set as null
      * @param {number} idx
-     * @param {module:zrender/Element} el
+     * @param {module:zrender/Element} [el]
      */
     listProto.setItemGraphicEl = function (idx, el) {
         var hostModel = this.hostModel;
@@ -922,8 +923,9 @@ define(function (require) {
             if (el.type === 'group') {
                 el.traverse(setItemDataAndSeriesIndex, el);
             }
-            this._graphicEls[idx] = el;
         }
+
+        this._graphicEls[idx] = el;
     };
 
     /**

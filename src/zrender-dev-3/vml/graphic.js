@@ -1,7 +1,5 @@
 // http://www.w3.org/TR/NOTE-VML
 // TODO Use proxy like svg instead of overwrite brush methods
-
-// ZR_INCLUDE_VML is defined in zrender or in UglifyJS
 define(function (require) {
 
     if (require('../core/env').canvasSupported) {

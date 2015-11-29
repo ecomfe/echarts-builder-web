@@ -23,7 +23,8 @@ define(function (require) {
     }
 
     function mousemove(e) {
-        if (this._dragging) {
+        if (this._dragging && e.gestureEvent !== 'pinchchange') {
+
             var rawE = e.event;
             rawE.preventDefault && rawE.preventDefault();
 
@@ -54,12 +55,19 @@ define(function (require) {
     }
 
     function mousewheel(e) {
-        var mouseX = e.offsetX;
-        var mouseY = e.offsetY;
+        var zoomDelta = e.wheelDelta < 0 ? 1.1 : 1 / 1.1;
+        zoom.call(this, e, zoomDelta, e.offsetX, e.offsetY);
+    }
+
+    function pinch(e) {
+        var zoomDelta = e.pinchScale > 1 ? 1.1 : 1 / 1.1;
+        zoom.call(this, e, zoomDelta, e.pinchX, e.pinchY);
+    }
+
+    function zoom(e, zoomDelta, zoomX, zoomY) {
         var rect = this.rect;
-        var wheelDelta = e.wheelDelta > 0 ? 1.1 : 1 / 1.1;
-        // console.log(wheelDelta, e.wheelDelta);
-        if (rect && rect.contain(mouseX, mouseY)) {
+
+        if (rect && rect.contain(zoomX, zoomY)) {
 
             var target = this.target;
 
@@ -68,7 +76,7 @@ define(function (require) {
                 var scale = target.scale;
 
                 var newZoom = this._zoom = this._zoom || 1;
-                newZoom *= wheelDelta;
+                newZoom *= zoomDelta;
                 // newZoom = Math.max(
                 //     Math.min(target.maxZoom, newZoom),
                 //     target.minZoom
@@ -76,15 +84,15 @@ define(function (require) {
                 var zoomScale = newZoom / this._zoom;
                 this._zoom = newZoom;
                 // Keep the mouse center when scaling
-                pos[0] -= (mouseX - pos[0]) * (zoomScale - 1);
-                pos[1] -= (mouseY - pos[1]) * (zoomScale - 1);
+                pos[0] -= (zoomX - pos[0]) * (zoomScale - 1);
+                pos[1] -= (zoomY - pos[1]) * (zoomScale - 1);
                 scale[0] *= zoomScale;
                 scale[1] *= zoomScale;
 
                 target.dirty();
             }
 
-            this.trigger('zoom', wheelDelta, mouseX, mouseY);
+            this.trigger('zoom', zoomDelta, zoomX, zoomY);
         }
     }
 
@@ -115,6 +123,7 @@ define(function (require) {
         var mousemoveHandler = bind(mousemove, this);
         var mouseupHandler = bind(mouseup, this);
         var mousewheelHandler = bind(mousewheel, this);
+        var pinchHandler = bind(pinch, this);
 
         Eventful.call(this);
 
@@ -134,6 +143,7 @@ define(function (require) {
             }
             if (controlType && controlType !== 'pan') {
                 zr.on('mousewheel', mousewheelHandler);
+                zr.on('pinch', pinchHandler);
             }
         };
 
@@ -142,11 +152,17 @@ define(function (require) {
             zr.off('mousemove', mousemoveHandler);
             zr.off('mouseup', mouseupHandler);
             zr.off('mousewheel', mousewheelHandler);
+            zr.off('pinch', pinchHandler);
         };
+
         this.dispose = this.disable;
 
         this.isDragging = function () {
             return this._dragging;
+        };
+
+        this.isPinching = function () {
+            return this._pinching;
         };
     }
 

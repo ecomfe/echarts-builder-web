@@ -537,7 +537,7 @@
                     return;
                 }
 
-                this.api.dispatch({
+                this.api.dispatchAction({
                     type: 'treemapMove',
                     from: this.uid,
                     seriesId: this.seriesModel.id,
@@ -553,7 +553,7 @@
          * @private
          */
         _onZoom: function (scale, mouseX, mouseY) {
-            if (this._state !== 'animating' && !this._controller.isDragging()) {
+            if (this._state !== 'animating') {
                 // These param must not be cached.
                 var viewRoot = this.seriesModel.getViewRoot();
 
@@ -584,7 +584,7 @@
 
                 rect.applyTransform(m);
 
-                this.api.dispatch({
+                this.api.dispatchAction({
                     type: 'treemapRender',
                     from: this.uid,
                     seriesId: this.seriesModel.id,
@@ -661,7 +661,7 @@
          * @private
          */
         _zoomToNode: function (targetInfo) {
-            this.api.dispatch({
+            this.api.dispatchAction({
                 type: 'treemapZoomToNode',
                 from: this.uid,
                 seriesId: this.seriesModel.id,

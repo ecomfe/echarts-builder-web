@@ -127,15 +127,32 @@ define(function(require) {
             var isAreaChart = !areaStyleModel.isEmpty();
             var stackedOnPoints = getStackedOnPoints(coordSys, data);
 
-            var isSymbolIgnore = !isCoordSysPolar && !seriesModel.get('showAllSymbol')
+            var showSymbol = !seriesModel.get('notShowSymbol');
+
+            var isSymbolIgnore = showSymbol && !isCoordSysPolar && !seriesModel.get('showAllSymbol')
                 && this._getSymbolIgnoreFunc(data, coordSys);
+
+            // Remove temporary symbols
+            var oldData = this._data;
+            oldData && oldData.eachItemGraphicEl(function (el, idx) {
+                if (el.__temp) {
+                    group.remove(el);
+                    oldData.setItemGraphicEl(idx, null);
+                }
+            });
+
+            // Remove previous created symbols if notShowSymbol changed to true
+            if (!showSymbol) {
+                symbolDraw.remove();
+            }
 
             // Initialization animation or coordinate system changed
             if (
                 !(polyline
                 && prevCoordSys.type === coordSys.type)
             ) {
-                symbolDraw.updateData(data, isSymbolIgnore);
+                showSymbol && symbolDraw.updateData(data, isSymbolIgnore);
+
                 polyline = this._newPolyline(group, points, coordSys, hasAnimation);
                 if (isAreaChart) {
                     polygon = this._newPolygon(
@@ -156,8 +173,9 @@ define(function(require) {
                     );
                 }
 
-                // Always update, or it is wrong in the case turning on legend because points is not changed
-                symbolDraw.updateData(data, isSymbolIgnore);
+                // Always update, or it is wrong in the case turning on legend
+                // because points are not changed
+                showSymbol && symbolDraw.updateData(data, isSymbolIgnore);
 
                 // Stop symbol animation and sync with line points
                 // FIXME performance?
@@ -236,7 +254,7 @@ define(function(require) {
             var data = seriesModel.getData();
             var dataIndex = queryDataIndex(data, payload);
 
-            if (dataIndex >= 0) {
+            if (dataIndex != null && dataIndex >= 0) {
                 var symbol = data.getItemGraphicEl(dataIndex);
                 if (!symbol) {
                     // Create a temporary symbol if it is not exists
@@ -248,6 +266,9 @@ define(function(require) {
                     );
                     symbol.__temp = true;
                     data.setItemGraphicEl(dataIndex, symbol);
+
+                    // Stop scale animation;
+                    symbol.childAt(0).stopAnimation(true);
 
                     this.group.add(symbol);
                 }
@@ -264,7 +285,7 @@ define(function(require) {
         downplay: function (seriesModel, ecModel, api, payload) {
             var data = seriesModel.getData();
             var dataIndex = queryDataIndex(data, payload);
-            if (dataIndex >= 0) {
+            if (dataIndex != null && dataIndex >= 0) {
                 var symbol = data.getItemGraphicEl(dataIndex);
                 if (symbol) {
                     if (symbol.__temp) {
@@ -343,13 +364,8 @@ define(function(require) {
         _getSymbolIgnoreFunc: function (data, coordSys) {
             var categoryAxis = coordSys.getAxesByScale('ordinal')[0];
             // `getLabelInterval` is provided by echarts/component/axis
-            if (categoryAxis && categoryAxis.getLabelInterval) {
-                var labelInterval = categoryAxis.getLabelInterval();
-                return function (idx) {
-                    return (typeof labelInterval === 'function')
-                            && !labelInterval(idx, categoryAxis.scale.getLabel(idx))
-                            || idx % (labelInterval + 1);
-                };
+            if (categoryAxis && categoryAxis.isLabelIgnored) {
+                return zrUtil.bind(categoryAxis.isLabelIgnored, categoryAxis);
             }
         },
 

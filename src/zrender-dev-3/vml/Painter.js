@@ -3,7 +3,7 @@
  *
  * @module zrender/vml/Painter
  */
-// ZR_INCLUDE_VML is defined in zrender or in UglifyJS
+
 define(function (require) {
 
     var zrLog = require('../core/log');

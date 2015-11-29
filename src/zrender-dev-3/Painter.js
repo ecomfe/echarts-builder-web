@@ -125,17 +125,21 @@
         this.root = root;
 
         var rootStyle = root.style;
-        rootStyle['-webkit-tap-highlight-color'] = 'transparent';
-        rootStyle['-webkit-user-select'] = 'none';
-        rootStyle['user-select'] = 'none';
-        rootStyle['-webkit-touch-callout'] = 'none';
+
+        // In node environment using node-canvas
+        if (rootStyle) {
+            rootStyle['-webkit-tap-highlight-color'] = 'transparent';
+            rootStyle['-webkit-user-select'] = 'none';
+            rootStyle['user-select'] = 'none';
+            rootStyle['-webkit-touch-callout'] = 'none';
+
+            root.innerHTML = '';
+        }
 
         /**
          * @type {module:zrender/Storage}
          */
         this.storage = storage;
-
-        root.innerHTML = '';
 
         var width = this._getWidth();
         var height = this._getHeight();

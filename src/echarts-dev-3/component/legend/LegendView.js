@@ -12,14 +12,14 @@ define(function (require) {
     var LEGEND_DISABLE_COLOR = '#ccc';
 
     function dispatchSelectAction(name, api) {
-        api.dispatch({
+        api.dispatchAction({
             type: 'legendToggleSelect',
             name: name
         });
     }
 
     function dispatchHighlightAction(seriesName, dataName, api) {
-        api.dispatch({
+        api.dispatchAction({
             type: 'highlight',
             seriesName: seriesName,
             name: dataName
@@ -27,7 +27,7 @@ define(function (require) {
     }
 
     function dispatchDownplayAction(seriesName, dataName, api) {
-        api.dispatch({
+        api.dispatchAction({
             type: 'downplay',
             seriesName: seriesName,
             name: dataName
@@ -153,6 +153,7 @@ define(function (require) {
                         );
 
                         itemGroup.on('click', curry(dispatchSelectAction, name, api))
+                            // FIXME Should not specify the series name
                             .on('mouseover', curry(dispatchHighlightAction, seriesModel.name, name, api))
                             .on('mouseout', curry(dispatchDownplayAction, seriesModel.name, name, api));
 
@@ -242,6 +243,12 @@ define(function (require) {
                 }
             });
             itemGroup.add(text);
+
+            // Add a invisible rect to increase the area of mouse hover
+            itemGroup.add(new graphic.Rect({
+                shape: itemGroup.getBoundingRect(),
+                invisible: true
+            }));
 
             itemGroup.eachChild(function (child) {
                 child.silent = !selectMode;

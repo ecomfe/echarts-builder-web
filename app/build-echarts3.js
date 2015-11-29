@@ -1,8 +1,5 @@
 define(function (require) {
 
-    // Defines
-    window.ZR_INCLUDE_VML = false;
-
     var optimizeString = require('./optimizeString');
 
     var etpl =require('../lib/etpl');
@@ -71,6 +68,9 @@ define(function (require) {
         echartsDeps.push('zrender/vml/vml');
     }
 
+    // Always require log and time axis
+    echartsDeps.push('echarts/scale/Time', 'echarts/scale/Log');
+
     // Loading scripts and build
     require(echartsDeps, function () {
         var code = '';
@@ -107,7 +107,8 @@ define(function (require) {
         if (!BUILD_CONFIG.amd) {
             endWrapperCode = etpl.compile(endWrapperCode)({
                 charts: charts,
-                components: components
+                components: components,
+                vml: BUILD_CONFIG.vml
             });
             if (!BUILD_CONFIG.source) {
                 code = optimizeString(code);
