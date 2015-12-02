@@ -186,7 +186,10 @@
                 components.push($(this).attr('name'));
             });
 
-            var url = 'build.html?charts=' + charts.join(',') + '&components=' + components.join(',');
+            var parameters = 'charts=' + charts.join(',') + '&components=' + components.join(',');
+            var url = 'build.html?' + parameters;
+
+            _hmt.push(['_trackEvent', 'Custom Echarts builder', 'build', parameters]);
 
             if (! $('#compress').prop('checked')) {
                 url += '&source=true';
@@ -206,7 +209,7 @@
     (function() {
       var hm = document.createElement("script");
       hm.src = "//hm.baidu.com/hm.js?4bad1df23f079e0d12bdbef5e65b072f";
-      var s = document.getElementsByTagName("script")[0]; 
+      var s = document.getElementsByTagName("script")[0];
       s.parentNode.insertBefore(hm, s);
     })();
     </script>
