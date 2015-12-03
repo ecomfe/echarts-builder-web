@@ -163,7 +163,7 @@
         function updateCheckbox() {
             $('#charts input, #components input').each(function () {
                 $(this).attr('checked', $(this).parent().hasClass('checked'));
-            })
+            });
         }
 
         $('#charts li, #components li').click(function () {
@@ -186,12 +186,9 @@
                 components.push($(this).attr('name'));
             });
 
-            var parameters = 'charts=' + charts.join(',') + '&components=' + components.join(',');
-            var url = 'build.html?' + parameters;
+            var url = 'build.html?' + 'charts=' + charts.join(',') + '&components=' + components.join(',');
 
-            _hmt.push(['_trackEvent', 'Custom Echarts builder', 'build', parameters]);
-
-            if (! $('#compress').prop('checked')) {
+            if (!$('#compress').prop('checked')) {
                 url += '&source=true';
             }
             if ($('#amd').prop('checked')) {
@@ -200,6 +197,8 @@
             if ($('#dev').prop('checked')) {
                 url += '&dev=true';
             }
+
+            _hmt.push(['_trackEvent', 'Custom Echarts builder', 'build', url]);
 
             window.open(url);
         });

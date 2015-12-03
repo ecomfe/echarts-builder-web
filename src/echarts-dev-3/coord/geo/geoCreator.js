@@ -20,17 +20,6 @@ define(function (require) {
         var width = geoModel.get('width');
         var height = geoModel.get('height');
 
-        if (!width && !height) {
-            var viewportWidth = api.getWidth();
-            var viewportHeight = api.getHeight();
-            if (rect.width / viewportWidth > rect.height / viewportHeight) {
-                width = viewportWidth * 0.8;
-            }
-            else {
-                height = viewportHeight * 0.8;
-            }
-        }
-
         var viewRect = layout.parsePositionInfo({
             x: geoModel.get('x'),
             y: geoModel.get('y'),
@@ -81,11 +70,15 @@ define(function (require) {
             // FIXME Create each time may be slow
             ecModel.eachComponent('geo', function (geoModel, idx) {
                 var name = geoModel.get('map');
-                var geoJson = mapDataStores[name];
-                // if (!geoJson) {
+                var mapData = mapDataStores[name];
+                // if (!mapData) {
                     // Warning
                 // }
-                var geo = new Geo(name + idx, name, geoJson);
+                var geo = new Geo(
+                    name + idx, name,
+                    mapData && mapData.geoJson, mapData && mapData.specialAreas,
+                    geoModel.get('nameMap')
+                );
                 geoList.push(geo);
 
                 setGeoCoords(geo, geoModel);
@@ -119,12 +112,19 @@ define(function (require) {
             });
 
             zrUtil.each(mapModelGroupBySeries, function (mapSeries, mapType) {
-                var geoJson = mapDataStores[mapType];
-                // if (!geoJson) {
+                var mapData = mapDataStores[mapType];
+                // if (!mapData) {
                     // Warning
                 // }
 
-                var geo = new Geo(mapType, mapType, geoJson);
+                var nameMapList = zrUtil.map(mapSeries, function (singleMapSeries) {
+                    return singleMapSeries.get('nameMap');
+                });
+                var geo = new Geo(
+                    mapType, mapType,
+                    mapData && mapData.geoJson, mapData && mapData.specialAreas,
+                    zrUtil.mergeAll(nameMapList)
+                );
                 geoList.push(geo);
 
                 // Inject resize method
@@ -144,10 +144,32 @@ define(function (require) {
 
         /**
          * @param {string} mapName
-         * @param {Object} geoJson
+         * @param {Object|string} geoJson
+         * @param {Object} [specialAreas]
+         *
+         * @example
+         *     $.get('USA.json', function (geoJson) {
+         *         echarts.registerMap('USA', geoJson);
+         *         // Or
+         *         echarts.registerMap('USA', {
+         *             geoJson: geoJson,
+         *             specialAreas: {}
+         *         })
+         *     });
          */
-        registerMap: function (mapName, geoJson) {
-            mapDataStores[mapName] = geoJson;
+        registerMap: function (mapName, geoJson, specialAreas) {
+            if (geoJson.geoJson && !geoJson.features) {
+                specialAreas = geoJson.specialAreas;
+                geoJson = geoJson.geoJson;
+            }
+            if (typeof geoJson === 'string') {
+                geoJson = (typeof JSON !== 'undefined' && JSON.parse)
+                    ? JSON.parse(geoJson) : eval('(' + geoJson + ')');
+            }
+            mapDataStores[mapName] = {
+                geoJson: geoJson,
+                specialAreas: specialAreas
+            };
         },
 
         /**
@@ -167,9 +189,7 @@ define(function (require) {
     echarts.getMap = geoCreator.getMap;
 
     // TODO
-    echarts.loadMap = function () {
-
-    };
+    echarts.loadMap = function () {};
 
     echarts.registerCoordinateSystem('geo', geoCreator);
 });

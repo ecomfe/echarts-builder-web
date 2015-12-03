@@ -37,20 +37,20 @@ define(function(require) {
                 labels[i], font, 'center', 'top'
             );
             rect[isAxisHorizontal ? 'x' : 'y'] += tickCoord;
+            rect[isAxisHorizontal ? 'width' : 'height'] *= 1.5;
             if (!textSpaceTakenRect) {
                 textSpaceTakenRect = rect.clone();
             }
             // There is no space for current label;
             else if (textSpaceTakenRect.intersect(rect)) {
                 accumulatedLabelInterval++;
-                continue;
+                autoLabelInterval = Math.max(autoLabelInterval, accumulatedLabelInterval);
             }
             else {
                 textSpaceTakenRect.union(rect);
+                // Reset
+                accumulatedLabelInterval = 0;
             }
-            autoLabelInterval = Math.max(autoLabelInterval, accumulatedLabelInterval);
-            // Reset
-            accumulatedLabelInterval = 0;
         }
 
         return autoLabelInterval;

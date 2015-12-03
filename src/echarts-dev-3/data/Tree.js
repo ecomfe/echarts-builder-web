@@ -196,11 +196,12 @@ define(function(require) {
         },
 
         /**
-         * @param {string=} [dimension='value'] Default 'value'. can be 'dim1', 'dim2', ...
+         * @param {string=} [dimension='value'] Default 'value'. can be 0, 1, 2, 3
          * @return {number} Value.
          */
         getValue: function (dimension) {
-            return this.hostTree.data.get(dimension || 'value', this.dataIndex);
+            var data = this.hostTree.data;
+            return data.get(data.getDimension(dimension || 'value'), this.dataIndex);
         },
 
         /**
@@ -316,7 +317,7 @@ define(function(require) {
          * @type {Array.<module:echarts/model/Model}
          */
         this.levelModels = zrUtil.map(levelOptions || [], function (levelDefine) {
-            return new Model(levelDefine, hostModel);
+            return new Model(levelDefine, hostModel, hostModel.ecModel);
         });
     }
 

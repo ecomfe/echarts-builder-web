@@ -237,48 +237,106 @@ define(function (require) {
          *     {mainType: 'dataZoom', query: {dataZoomId: 'abc'}},
          *     function (model, index) {...}
          * );
+         *
          * findComponents(
          *     {mainType: 'series', subType: 'pie', query: {seriesName: 'uio'}},
          *     function (model, index) {...}
          * );
-         * findComponents(
+         *
+         * var result = findComponents(
          *     {mainType: 'series'},
          *     function (model, index) {...}
          * );
+         * // result like [component0, componnet1, ...]
+         *
+         * var result = findComponents(
+         *     {mainType: 'series', query: {
+         *         type: 'someAction'
+         *         batch: [
+         *             {seriesId: 'asdf', dataIndex: 6},
+         *             {seriesId: 'qwer', dataIndex: 4},
+         *             ...
+         *         ]
+         *     }}
+         * )
+         * result like [component0, component1, component2]
+         * result.batchQueries like [
+         *     {type: 'someAction', seriesId: 'qwer', dataIndex: 4},
+         *     {type: 'someAction', seriesId: 'qwer', dataIndex: 4},
+         *     {type: 'someAction', seriesId: 'asdf', dataIndex: 6},
+         *     ...
+         * ]
+         * where each item of batchQueryies is coresponding to each item of result.
+         *
          *
          * @param {Object} condition
          * @param {string} condition.mainType Mandatory.
          * @param {string} [condition.subType] Optional.
          * @param {Object} [condition.query] like {xxxIndex, xxxId, xxxName},
          *        where xxx is mainType.
-         *        If query attribute is null/undefined, do not filtering by
-         *        query conditions, which is convenient for no-payload
-         *        situations like visual coding, layout.
+         *        If query attribute is null/undefined or has no index/id/name,
+         *        do not filtering by query conditions, which is convenient for
+         *        no-payload situations or when target of action is global.
          * @param {Function} [condition.filter] parameter: component, return boolean.
+         * @return {Array.<module:echarts/model/Component>} If condition.query.batch
+         *        exist, result by batch is stored on 'batch' prop of returned array,
+         *        see example above;
          */
         findComponents: function (condition) {
-            var mainType = condition.mainType;
             var query = condition.query;
-            var result;
+            var mainType = condition.mainType;
 
-            if (query) {
-                condition.index = query[mainType + 'Index'];
-                condition.id = query[mainType + 'Id'];
-                condition.name = query[mainType + 'Name'];
-
-                result = this.queryComponents(condition);
+            if (query && query.batch) {
+                var result = [];
+                var batchQueries = result.batchQueries = [];
+                each(query.batch, function (batchItem) {
+                    batchItem = zrUtil.defaults(zrUtil.extend({}, batchItem), query);
+                    batchItem.batch = null;
+                    var res = doQuery.call(this, batchItem);
+                    each(res, function (re) {
+                        result.push(re);
+                        batchQueries.push(batchItem);
+                    });
+                }, this);
+                return result;
             }
             else {
-                result = filterBySubType(
-                    this._componentsMap[mainType], condition
-                );
+                return doQuery.call(this, query);
             }
 
-            if (condition.filter) {
-                result = filter(result, condition.filter);
+            function doQuery(q) {
+                var queryCond = getQueryCond(q);
+                var result = queryCond
+                    ? this.queryComponents(queryCond)
+                    : this._componentsMap[mainType];
+
+                return doFilter(filterBySubType(result, condition));
             }
 
-            return result;
+            function getQueryCond(q) {
+                var indexAttr = mainType + 'Index';
+                var idAttr = mainType + 'Id';
+                var nameAttr = mainType + 'Name';
+                return q && (
+                        q.hasOwnProperty(indexAttr)
+                        || q.hasOwnProperty(idAttr)
+                        || q.hasOwnProperty(nameAttr)
+                    )
+                    ? {
+                        mainType: mainType,
+                        // subType will be filtered finally.
+                        index: q[indexAttr],
+                        id: q[idAttr],
+                        name: q[nameAttr]
+                    }
+                    : null;
+            }
+
+            function doFilter(res) {
+                return condition.filter
+                     ? filter(res, condition.filter)
+                     : res;
+            }
         },
 
         /**
@@ -292,12 +350,17 @@ define(function (require) {
          * });
          * eachComponent(
          *     {mainType: 'dataZoom', query: {dataZoomId: 'abc'}},
-         *     function (model, index) {...}
+         *     function (model, index, queryInfo) {...}
          * );
          * eachComponent(
          *     {mainType: 'series', subType: 'pie', query: {seriesName: 'uio'}},
-         *     function (model, index) {...}
+         *     function (model, index, queryInfo) {...}
          * );
+         * eachComponent(
+         *     {mainType: 'series', subType: 'pie', query: {batch: [ ... ]}},
+         *     function (model, index, queryInfo) {...}
+         * );
+         * where query info is always an object but not null.
          *
          * @param {string|Object=} mainType When mainType is object, the definition
          *                                  is the same as the method 'findComponents'.
@@ -317,10 +380,19 @@ define(function (require) {
                 });
             }
             else if (zrUtil.isString(mainType)) {
-                each(componentsMap[mainType], cb, context);
+                each(componentsMap[mainType], function (cpt, index) {
+                    cb.call(context, cpt, index, {});
+                }, context);
             }
             else if (isObject(mainType)) {
-                each(this.findComponents(mainType), cb, context);
+                var queryResult = this.findComponents(mainType);
+                each(queryResult, function (cpt, index) {
+                    var batchQueries = queryResult.batchQueries;
+                    cb.call(
+                        context, cpt, index,
+                        batchQueries ? batchQueries[index] : mainType.query
+                    );
+                });
             }
         },
 
@@ -661,6 +733,8 @@ define(function (require) {
      * @inner
      */
     function filterBySubType(components, condition) {
+        // Using hasOwnProperty for restrict. Consider
+        // subType is undefined in user payload.
         return condition.hasOwnProperty('subType')
             ? filter(components, function (cpt) {
                 return cpt.subType === condition.subType;

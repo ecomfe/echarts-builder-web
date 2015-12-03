@@ -5,11 +5,11 @@
 define(function (require) {
 
     var UNDEFINED = 'undefined';
-    var global = window;
-    var Float64Array = typeof global.Float64Array === UNDEFINED
-        ? Array : global.Float64Array;
-    var Int32Array = typeof global.Int32Array === UNDEFINED
-        ? Array : global.Int32Array;
+    var globalObj = typeof window === 'undefined' ? global : window;
+    var Float64Array = typeof globalObj.Float64Array === UNDEFINED
+        ? Array : globalObj.Float64Array;
+    var Int32Array = typeof globalObj.Int32Array === UNDEFINED
+        ? Array : globalObj.Int32Array;
 
     var dataCtors = {
         'float': Float64Array,
@@ -46,6 +46,7 @@ define(function (require) {
      * @alias module:echarts/data/List
      *
      * @param {Array.<string>} dimensions
+     *        Dimensions should be concrete names like x, y, z, lng, lat, angle, radius
      * @param {module:echarts/model/Model} hostModel
      */
     var List = function (dimensions, hostModel) {
@@ -172,10 +173,25 @@ define(function (require) {
     listProto.type = 'list';
 
     /**
+     * Get dimension name
+     * @param {string|number} dim
+     *        Dimension can be concrete names like x, y, z, lng, lat, angle, radius
+     *        Or a ordinal number. For example getDimensionInfo(0) will return 'x' or 'lng' or 'radius'
+     */
+    listProto.getDimension = function (dim) {
+        if (!isNaN(dim)) {
+            dim = this.dimensions[dim] || dim;
+        }
+        return dim;
+    };
+    /**
      * Get type and stackable info of particular dimension
+     * @param {string|number} dim
+     *        Dimension can be concrete names like x, y, z, lng, lat, angle, radius
+     *        Or a ordinal number. For example getDimensionInfo(0) will return 'x' or 'lng' or 'radius'
      */
     listProto.getDimensionInfo = function (dim) {
-        return this._dimensionInfos[dim];
+        return this._dimensionInfos[this.getDimension(dim)];
     };
 
     /**
@@ -324,7 +340,7 @@ define(function (require) {
 
     /**
      * Get value
-     * @param {string} dim
+     * @param {string} dim Dim must be concrete name.
      * @param {number} idx
      * @param {boolean} stack
      * @return {number}
@@ -460,7 +476,11 @@ define(function (require) {
         idx = this.getRawIndex(idx);
         var itemOpt = this._rawData[idx];
         var valueProp = this._valueProp;
-        if (itemOpt && itemOpt.hasOwnProperty(valueProp)) {
+        // FIXME Value may not exist in data item object when data is links
+        // if (itemOpt && itemOpt.hasOwnProperty(valueProp)) {
+        //     return itemOpt[valueProp];
+        // }
+        if (zrUtil.isObject(itemOpt) && !zrUtil.isArray(itemOpt)) {
             return itemOpt[valueProp];
         }
         return itemOpt;
@@ -565,7 +585,7 @@ define(function (require) {
 
 
     function normalizeDimensions(dimensions) {
-        if (typeof (dimensions) === 'string') {
+        if (!zrUtil.isArray(dimensions)) {
             dimensions = [dimensions];
         }
         return dimensions;
@@ -591,7 +611,9 @@ define(function (require) {
             dimensions = [];
         }
 
-        dimensions = normalizeDimensions(dimensions);
+        dimensions = zrUtil.map(
+            normalizeDimensions(dimensions), this.getDimension, this
+        );
 
         var value = [];
         var dimSize = dimensions.length;
@@ -633,7 +655,9 @@ define(function (require) {
             dimensions = [];
         }
 
-        dimensions = normalizeDimensions(dimensions);
+        dimensions = zrUtil.map(
+            normalizeDimensions(dimensions), this.getDimension, this
+        );
 
         var newIndices = [];
         var value = [];
@@ -702,7 +726,9 @@ define(function (require) {
      * @return {Array}
      */
     listProto.map = function (dimensions, cb, stack, context) {
-        dimensions = normalizeDimensions(dimensions);
+        dimensions = zrUtil.map(
+            normalizeDimensions(dimensions), this.getDimension, this
+        );
 
         var allDimensions = this.dimensions;
         var list = new List(

@@ -13,6 +13,8 @@
  */
 define(function (require) {
 
+    require('zrender/vml/vml');
+
     var GlobalModel = require('./model/Global');
     var ExtensionAPI = require('./ExtensionAPI');
     var CoordinateSystemManager = require('./CoordinateSystem');
@@ -250,7 +252,14 @@ define(function (require) {
                     backgroundColor = 'transparent';
                 }
             }
-            backgroundColor && (this._dom.style.backgroundColor = backgroundColor);
+            if (env.node) {
+                this._zr.configLayer(0, {
+                    clearColor: backgroundColor
+                });
+            }
+            else {
+                backgroundColor && (this._dom.style.backgroundColor = backgroundColor);
+            }
 
             console.time && console.timeEnd('update');
         },
@@ -321,10 +330,12 @@ define(function (require) {
 
         ecModel.eachComponent(
             {mainType: 'series', query: payload},
-            function (seriesModel) {
+            function (seriesModel, index, payloadInfo) {
                 var chartView = this._chartsMap[seriesModel.id];
                 if (chartView) {
-                    chartView[method](seriesModel, ecModel, this._api, payload);
+                    chartView[method](
+                        seriesModel, ecModel, this._api, payloadInfo
+                    );
                 }
             },
             this
@@ -337,6 +348,33 @@ define(function (require) {
     echartsProto.resize = function () {
         this._zr.resize();
         updateMethods.update.call(this);
+
+        // Resize loading effect
+        this._loadingFX && this._loadingFX.resize();
+    };
+
+    var defaultLoadingEffect = require('./loading/default');
+    /**
+     * Show loading effect
+     * @param  {string} [name='default']
+     * @param  {Object} [cfg]
+     */
+    echartsProto.showLoading = function (name, cfg) {
+        if (zrUtil.isObject(name)) {
+            cfg = name;
+            name = 'default';
+        }
+        var el = defaultLoadingEffect(this._api, cfg);
+        this._loadingFX = el;
+        this._zr.add(el);
+    };
+
+    /**
+     * Hide loading effect
+     */
+    echartsProto.hideLoading = function () {
+        this._zr.remove(this._loadingFX);
+        this._loadingFX = null;
     };
 
     /**
@@ -439,6 +477,7 @@ define(function (require) {
                 }
                 else {
                     // Error
+                    return;
                 }
             }
 
@@ -905,6 +944,26 @@ define(function (require) {
      */
     echarts.extendComponentView = function (opts) {
         return ComponentView.extend(opts);
+    };
+
+    /**
+     * ZRender need a canvas context to do measureText.
+     * But in node environment canvas may be created by node-canvas.
+     * So we need to specify how to create a canvas instead of using document.createElement('canvas')
+     *
+     * Be careful of using it in the browser.
+     *
+     * @param {Function} creator
+     * @example
+     *     var Canvas = require('canvas');
+     *     var echarts = require('echarts');
+     *     echarts.setCanvasCreator(function () {
+     *         // Small size is enough.
+     *         return new Canvas(32, 32);
+     *     });
+     */
+    echarts.setCanvasCreator = function (creator) {
+        zrUtil.createCanvas = creator;
     };
 
     echarts.registerVisualCoding('echarts', require('./visual/seriesColor'));

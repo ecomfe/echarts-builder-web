@@ -34,11 +34,7 @@ define(function (require) {
         /* jshint camelcase: false */
         // compressor needs figure_out_scope too
         ast.figure_out_scope();
-        ast = ast.transform(UglifyJS.Compressor({
-            global_defs: {
-                // ZR_INCLUDE_VML: false
-            }
-        }));
+        ast = ast.transform(UglifyJS.Compressor( {} ));
 
         // need to figure out scope again so mangler works optimally
         ast.figure_out_scope();
@@ -94,7 +90,7 @@ define(function (require) {
         for (var id in esl.modules) {
             var moduleInfo = esl.modules[id];
             // Not a echarts/zrender module
-            if (! id.match(/^(echarts|zrender)/)) {
+            if (!id.match(/^(echarts|zrender)/)) {
                 continue;
             }
 
@@ -111,7 +107,8 @@ define(function (require) {
                 vml: BUILD_CONFIG.vml
             });
             if (!BUILD_CONFIG.source) {
-                code = optimizeString(code);
+                // FIXME 文件特别大的时候不能 mangle 字符串变量
+                // code = optimizeString(code);
             }
             code = startWrapperCode + amdCode + code + endWrapperCode;
         }

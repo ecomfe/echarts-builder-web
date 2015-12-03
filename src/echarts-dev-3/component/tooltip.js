@@ -229,8 +229,7 @@ define(function (require) {
              */
             this._lastHover = {
                 // data
-                // dataIndex
-                // seriesIndex
+                // payloadBatch
             };
 
             var tooltipContent = this._tooltipContent;
@@ -343,6 +342,9 @@ define(function (require) {
                     this._ticket = '';
                     // If either single data or series use item trigger
                     this._hideAxisPointer();
+                    // Reset last hover and dispatch downplay action
+                    this._resetLastHover();
+
                     this._showItemTooltipContent(hostModel, dataIndex, e);
                 }
             }
@@ -724,35 +726,35 @@ define(function (require) {
             var rootTooltipModel = this._tooltipModel;
             var tooltipContent = this._tooltipContent;
 
-            var data = seriesList[0].getData();
             var baseAxis = coordSys.getBaseAxis();
+            // FIXME
+            // Dont case by case
+            var val = value[baseAxis.dim === 'x' || baseAxis.dim === 'radius' ? 0 : 1];
 
-            var val = value[baseAxis.dim === 'x' ? 0 : 1];
-            var dataIndex = data.indexOfNearest(baseAxis.dim, val);
+            var payloadBatch = zrUtil.map(seriesList, function (series) {
+                return {
+                    seriesIndex: series.seriesIndex,
+                    dataIndex: series.getData().indexOfNearest(baseAxis.dim, val)
+                };
+            });
 
             var api = this._api;
 
             // FIXME Not here
             var lastHover = this._lastHover;
-            if (lastHover.seriesIndex != null && !contentNotChange) {
+            if (lastHover.payloadBatch && !contentNotChange) {
                 this._api.dispatchAction({
                     type: 'downplay',
-                    seriesIndex: lastHover.seriesIndex,
-                    dataIndex: lastHover.dataIndex
+                    batch: zrUtil.clone(lastHover.payloadBatch, true)
                 });
             }
             // Dispatch highlight action
             if (!contentNotChange) {
-                var seriesIndices = zrUtil.map(seriesList, function (series) {
-                    return series.seriesIndex;
-                });
                 this._api.dispatchAction({
                     type: 'highlight',
-                    seriesIndex: seriesIndices,
-                    dataIndex: dataIndex
+                    batch: zrUtil.clone(payloadBatch, true)
                 });
-                lastHover.seriesIndex = seriesIndices;
-                lastHover.dataIndex = dataIndex;
+                lastHover.payloadBatch = payloadBatch;
             }
 
             if (baseAxis && rootTooltipModel.get('showContent')) {
@@ -761,8 +763,8 @@ define(function (require) {
                 var positionExpr = rootTooltipModel.get('position');
                 var html;
 
-                var paramsList = zrUtil.map(seriesList, function (series) {
-                    return series.getDataParams(dataIndex);
+                var paramsList = zrUtil.map(seriesList, function (series, index) {
+                    return series.getDataParams(payloadBatch[index].dataIndex);
                 });
                 // If only one series
                 // FIXME
@@ -773,14 +775,16 @@ define(function (require) {
                 tooltipContent.show(rootTooltipModel);
 
                 // Update html content
+                var fitstDataIndex = payloadBatch[0].dataIndex;
                 if (!contentNotChange) {
                     // Reset ticket
                     this._ticket = '';
                     if (!formatter) {
                         // Default tooltip content
-                        html = data.getName(dataIndex) + '<br />'
-                            + zrUtil.map(seriesList, function (series) {
-                                return series.formatTooltip(dataIndex, true);
+                        // FIXME shold be the first data which has name?
+                        html = seriesList[0].getData().getName(fitstDataIndex) + '<br />'
+                            + zrUtil.map(seriesList, function (series, index) {
+                                return series.formatTooltip(payloadBatch[index].dataIndex, true);
                             }).join('<br />');
                     }
                     else {
@@ -789,7 +793,7 @@ define(function (require) {
                         }
                         else if (typeof formatter === 'function') {
                             var self = this;
-                            var ticket = 'axis_' + coordSys.name + '_' + dataIndex;
+                            var ticket = 'axis_' + coordSys.name + '_' + fitstDataIndex;
                             var callback = function (cbTicket, html) {
                                 if (cbTicket === self._ticket) {
                                     tooltipContent.setContent(html);
@@ -899,22 +903,23 @@ define(function (require) {
                 this.group.show();
             }
         },
+
+        _resetLastHover: function () {
+            var lastHover = this._lastHover;
+            if (lastHover.payloadBatch) {
+                this._api.dispatchAction({
+                    type: 'downplay',
+                    batch: lastHover.payloadBatch
+                });
+            }
+            // Reset lastHover
+            this._lastHover = {};
+        },
         /**
          * Hide axis pointer
          * @param {string} [coordSysName]
          */
         _hideAxisPointer: function (coordSysName) {
-            var lastHover = this._lastHover;
-            if (lastHover.seriesIndex != null && lastHover.dataIndex != null) {
-                this._api.dispatchAction({
-                    type: 'downplay',
-                    seriesIndex: lastHover.seriesIndex,
-                    dataIndex: lastHover.dataIndex
-                });
-            }
-            // Reset lastHover
-            this._lastHover = {};
-
             if (coordSysName) {
                 var axisPointers = this._axisPointers[coordSysName];
                 axisPointers && zrUtil.each(axisPointers, function (el) {
@@ -928,6 +933,7 @@ define(function (require) {
 
         _hide: function () {
             this._hideAxisPointer();
+            this._resetLastHover();
             if (!this._alwaysShowContent) {
                 this._tooltipContent.hideLater(this._tooltipModel.get('hideDelay'));
             }

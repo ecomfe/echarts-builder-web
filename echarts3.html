@@ -14,7 +14,7 @@
         </div>
     </header>
     <main id="main">
-        <h1>ECharts 3.0 下载</h1>
+        <h1>ECharts 3.0 测试版下载</h1>
         <div id="configuration">
             <section id="charts">
                 <h3>图表<span>chart</span></h3>
@@ -74,6 +74,11 @@
                         <img src="img/icon3/chart/funnel.svg">
                         <input type="checkbox" name="funnel">
                         <h5>漏斗图 <span>Funnel</span></h5>
+                    </li>
+                    <li>
+                        <img src="img/icon3/chart/sankey.svg">
+                        <input type="checkbox" name="sankey">
+                        <h5>桑基图 <span>Sankey</span></h5>
                     </li>
                 </ul>
             </section>
@@ -153,8 +158,29 @@
                 </div>
             </section>
         </div>
+        <div id="statement">
+            <p>感谢对ECharts关注与支持，本页面将帮助您下载ECharts 3的测试版。测试版会存在一些我们暂未发现的缺陷及问题，我们会在后续的测试环节中积极发现并加以修复，也欢迎您如果发现问题或者有更好的建议，通过以下方式反馈给我们：</p>
+            <ol>
+                <li>1. 通过Github的Issue，给个链接</li>
+                <li>2. 通过发送电子邮件到echarts-bug@baidu.com进行反馈</li>
+                <li>3. 通过加入ECharts的Baidu Hi讨论群（1379172）进行反馈</li>
+            </ol>
+            <p>测试版依然使用之前的 <a target="_blank" href="https://github.com/ecomfe/echarts/blob/master/LICENSE.txt">协议</a> ，您依然可以继续免费使用我们的产品。
+            由于目前质量还存在不稳定性，不建议您直接使用ECharts 3测试版在您的正式项目之中，我们会尽快发布正式版，以满足您的需求。非常感谢您选择ECharts！</p>
+        </div>
         <div id="action">
-            <button id="build">生 成</button>
+            <div>
+                <p style="text-align:center;">
+                    为了更好地为您提供关于ECharts 3的相关资讯，您可以留下您的电子邮箱
+                </p>
+                <div>
+                    <input type="text" name="email" id="email" placeholder="someone@email.com">
+                </div>
+                <div class="clear"></div>
+                <div>
+                    <button id="build">下 载</button>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -204,6 +230,15 @@
 
             url += '&version=3';
             url += '&dev=true';
+
+            var email = $('#email').val();
+            if (email) {
+                url += '&email=' + email;
+                // Try use custom var
+                _hmt.push(['_setCustomVar', 1, 'email', email, 1]);
+            }
+
+            _hmt.push(['_trackEvent', 'Custom Echarts 3 builder', 'build', url]);
 
             window.open(url);
         });

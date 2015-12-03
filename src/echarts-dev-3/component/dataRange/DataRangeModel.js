@@ -50,10 +50,10 @@ define(function(require) {
             categories: null,          // 描述 category 数据。如：['some1', 'some2', 'some3']，设置后，min max失效。
             dimension: null,
 
-            inRange: null,             // 'color', 'colorH', 'colorS', 'colorL', 'colorA',
+            inRange: null,             // 'color', 'colorHue', 'colorSaturation', 'colorLightness', 'colorAlpha',
                                        // 'symbol', 'symbolSize'
 
-            outOfRange: null,          // 'color', 'colorH', 'colorS', 'colorL', 'colorA',
+            outOfRange: null,          // 'color', 'colorHue', 'colorSaturation', 'colorLightness', 'colorAlpha',
                                        // 'symbol', 'symbolSize'
 
             orient: 'vertical',        // 布局方式，默认为垂直布局，可选为：
@@ -79,8 +79,8 @@ define(function(require) {
             itemWidth: null,              // 值域图形宽度
             itemHeight: null,             // 值域图形高度
             precision: 0,              // 小数精度，默认为0，无小数点
-            // color: ['#bf444c', '#d88273', '#f6efa6'],//颜色（deprecated，兼容ec2，对应数值由高到低）
-            color: ['#006edd', '#e0ffff'],//颜色（deprecated，兼容ec2，对应数值由高到低）
+            color: ['#bf444c', '#d88273', '#f6efa6'],//颜色（deprecated，兼容ec2，对应数值由高到低）
+            // color: ['#006edd', '#e0ffff'],//颜色（deprecated，兼容ec2，对应数值由高到低）
 
             // formatter: null,
             text: null,                // 文本，如['高', '低']，兼容ec2，text[0]对应高值，text[1]对应低值
@@ -259,8 +259,7 @@ define(function(require) {
         getDataDimension: function (list) {
             var optDim = this.option.dimension;
             return optDim != null
-                ? optDim
-                : list.dimensions[list.dimensions.length - 1];
+                ? optDim : list.dimensions.length - 1;
         },
 
         /**
@@ -378,7 +377,7 @@ define(function(require) {
                     var itemSize = this.itemSize;
                     var visuals = controller[state];
 
-                    // Set inactive color for controller if no other color attr (like colorA) specified.
+                    // Set inactive color for controller if no other color attr (like colorAlpha) specified.
                     if (!visuals) {
                         visuals = controller[state] = {
                             color: isCategory ? inactiveColor : [inactiveColor]

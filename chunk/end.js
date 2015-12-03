@@ -30,4 +30,6 @@ require("${chart}");
 _global['echarts'] = echarts;
 _global['zrender'] = zrender;
 
+return echarts;
+
 })(window);

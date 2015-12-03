@@ -89,6 +89,71 @@ define(function(require) {
         }
     }
 
+    function createGridClipShape(cartesian, hasAnimation, seriesModel) {
+        var xExtent = getAxisExtentWithGap(cartesian.getAxis('x'));
+        var yExtent = getAxisExtentWithGap(cartesian.getAxis('y'));
+
+        var clipPath = new graphic.Rect({
+            shape: {
+                x: xExtent[0],
+                y: yExtent[0],
+                width: xExtent[1] - xExtent[0],
+                height: yExtent[1] - yExtent[0]
+            }
+        });
+
+        if (hasAnimation) {
+            clipPath.shape[cartesian.getBaseAxis().isHorizontal() ? 'width' : 'height'] = 0;
+            graphic.initProps(clipPath, {
+                shape: {
+                    width: xExtent[1] - xExtent[0],
+                    height: yExtent[1] - yExtent[0]
+                }
+            }, seriesModel);
+        }
+
+        return clipPath;
+    }
+
+    function createPolarClipShape(polar, hasAnimation, seriesModel) {
+        var angleAxis = polar.getAngleAxis();
+        var radiusAxis = polar.getRadiusAxis();
+
+        var radiusExtent = radiusAxis.getExtent();
+        var angleExtent = angleAxis.getExtent();
+
+        var RADIAN = Math.PI / 180;
+
+        var clipPath = new graphic.Sector({
+            shape: {
+                cx: polar.cx,
+                cy: polar.cy,
+                r0: radiusExtent[0],
+                r: radiusExtent[1],
+                startAngle: -angleExtent[0] * RADIAN,
+                endAngle: -angleExtent[1] * RADIAN,
+                clockwise: angleAxis.inverse
+            }
+        });
+
+        if (hasAnimation) {
+            clipPath.shape.endAngle = -angleExtent[0] * RADIAN;
+            graphic.initProps(clipPath, {
+                shape: {
+                    endAngle: -angleExtent[1] * RADIAN
+                }
+            }, seriesModel);
+        }
+
+        return clipPath;
+    }
+
+    function createClipShape(coordSys, hasAnimation, seriesModel) {
+        return coordSys.type === 'polar'
+            ? createPolarClipShape(coordSys, hasAnimation, seriesModel)
+            : createGridClipShape(coordSys, hasAnimation, seriesModel);
+    }
+
     return ChartView.extend({
 
         type: 'line',
@@ -127,7 +192,7 @@ define(function(require) {
             var isAreaChart = !areaStyleModel.isEmpty();
             var stackedOnPoints = getStackedOnPoints(coordSys, data);
 
-            var showSymbol = !seriesModel.get('notShowSymbol');
+            var showSymbol = seriesModel.get('showSymbol');
 
             var isSymbolIgnore = showSymbol && !isCoordSysPolar && !seriesModel.get('showAllSymbol')
                 && this._getSymbolIgnoreFunc(data, coordSys);
@@ -141,7 +206,7 @@ define(function(require) {
                 }
             });
 
-            // Remove previous created symbols if notShowSymbol changed to true
+            // Remove previous created symbols if showSymbol changed to false
             if (!showSymbol) {
                 symbolDraw.remove();
             }
@@ -161,16 +226,12 @@ define(function(require) {
                         coordSys, hasAnimation
                     );
                 }
-                lineGroup.setClipPath(
-                    this._createClipShape(coordSys, true, seriesModel)
-                );
+                lineGroup.setClipPath(createClipShape(coordSys, true, seriesModel));
             }
             else {
                 // Update clipPath
                 if (hasAnimation) {
-                    lineGroup.setClipPath(
-                        this._createClipShape(coordSys, false, seriesModel)
-                    );
+                    lineGroup.setClipPath(createClipShape(coordSys, false, seriesModel));
                 }
 
                 // Always update, or it is wrong in the case turning on legend
@@ -428,71 +489,6 @@ define(function(require) {
                     }
                 });
             }
-        },
-
-        _createClipShape: function (coordSys, hasAnimation, seriesModel) {
-            return coordSys.type === 'polar'
-                ? this._createPolarClipShape(coordSys, hasAnimation, seriesModel)
-                : this._createGridClipShape(coordSys, hasAnimation, seriesModel);
-        },
-
-        _createGridClipShape: function (cartesian, hasAnimation, seriesModel) {
-            var xExtent = getAxisExtentWithGap(cartesian.getAxis('x'));
-            var yExtent = getAxisExtentWithGap(cartesian.getAxis('y'));
-
-            var clipPath = new graphic.Rect({
-                shape: {
-                    x: xExtent[0],
-                    y: yExtent[0],
-                    width: xExtent[1] - xExtent[0],
-                    height: yExtent[1] - yExtent[0]
-                }
-            });
-
-            if (hasAnimation) {
-                clipPath.shape[cartesian.getBaseAxis().isHorizontal() ? 'width' : 'height'] = 0;
-                graphic.initProps(clipPath, {
-                    shape: {
-                        width: xExtent[1] - xExtent[0],
-                        height: yExtent[1] - yExtent[0]
-                    }
-                }, seriesModel);
-            }
-
-            return clipPath;
-        },
-
-        _createPolarClipShape: function (polar, hasAnimation, seriesModel) {
-            var angleAxis = polar.getAngleAxis();
-            var radiusAxis = polar.getRadiusAxis();
-
-            var radiusExtent = radiusAxis.getExtent();
-            var angleExtent = angleAxis.getExtent();
-
-            var RADIAN = Math.PI / 180;
-
-            var clipPath = new graphic.Sector({
-                shape: {
-                    cx: polar.cx,
-                    cy: polar.cy,
-                    r0: radiusExtent[0],
-                    r: radiusExtent[1],
-                    startAngle: -angleExtent[0] * RADIAN,
-                    endAngle: -angleExtent[1] * RADIAN,
-                    clockwise: angleAxis.inverse
-                }
-            });
-
-            if (hasAnimation) {
-                clipPath.shape.endAngle = -angleExtent[0] * RADIAN;
-                graphic.initGraphicEl(clipPath, {
-                    shape: {
-                        endAngle: -angleExtent[1] * RADIAN
-                    }
-                }, seriesModel);
-            }
-
-            return clipPath;
         },
 
         remove: function (ecModel) {

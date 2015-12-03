@@ -68,15 +68,6 @@ define(function(require) {
             height: 0
         },
 
-        beforeBrush: function () {
-            var style = this.style;
-            if (style.textPosition === 'inside') {
-                style.textPosition = ['50%', '35%'];
-                style.textAlign = 'center';
-                style.textBaseline = 'middle';
-            }
-        },
-
         buildPath: function (path, shape) {
             var x = shape.x;
             var y = shape.y;
@@ -256,10 +247,27 @@ define(function(require) {
             height: 0
         },
 
+        beforeBrush: function () {
+            var style = this.style;
+            var shape = this.shape;
+            // FIXME
+            if (shape.symbolType === 'pin' && style.textPosition === 'inside') {
+                style.textPosition = ['50%', '40%'];
+                style.textAlign = 'center';
+                style.textBaseline = 'middle';
+            }
+        },
+
         buildPath: function (ctx, shape) {
-            var proxySymbol = symbolBuildProxies[shape.symbolType];
-            if (proxySymbol) {
-                symbolShapeMakers[shape.symbolType](
+            var symbolType = shape.symbolType;
+            var proxySymbol = symbolBuildProxies[symbolType];
+            if (shape.symbolType !== 'none') {
+                if (!proxySymbol) {
+                    // Default rect
+                    symbolType = 'rect';
+                    proxySymbol = symbolBuildProxies[symbolType];
+                }
+                symbolShapeMakers[symbolType](
                     shape.x, shape.y, shape.width, shape.height, proxySymbol.shape
                 );
                 proxySymbol.buildPath(ctx, proxySymbol.shape);
@@ -320,10 +328,6 @@ define(function(require) {
                 symbolPath = graphic.makePath(symbolType.slice(7), {}, new BoundingRect(x, y, w, h));
             }
             else {
-                // Default rect
-                if (!symbolShapeMakers[symbolType]) {
-                    symbolType = 'rect';
-                }
                 symbolPath = new Symbol({
                     shape: {
                         symbolType: symbolType,

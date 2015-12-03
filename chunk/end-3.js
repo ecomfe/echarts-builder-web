@@ -10,10 +10,10 @@ require('${chart}');
 /** for: ${components} as ${component} */
 require('${component}');
 /** /for */
-exports['echarts'] = echarts;
 
 /** if: ${vml} */
 require('zrender/vml/vml');
 /** /if */
 
+return echarts;
 }));
