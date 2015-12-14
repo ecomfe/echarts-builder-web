@@ -58,6 +58,13 @@ define(function (require) {
         return 'echarts/component/' + component;
     });
 
+    if (charts.indexOf('echarts/chart/scatter') >= 0) {
+        charts.push('echarts/chart/effectScatter');
+    }
+    if (charts.indexOf('echarts/chart/map') >= 0) {
+        charts.push('echarts/chart/geoLine');
+    }
+
     var echartsDeps = ['echarts'].concat(charts).concat(components);
 
     if (BUILD_CONFIG.vml) {

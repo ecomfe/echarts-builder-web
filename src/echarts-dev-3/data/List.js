@@ -199,8 +199,9 @@ define(function (require) {
      * @param {Array.<Object|number|Array>} data
      * @param {Array.<string>} [nameList]
      * @param {string} [valueProp='value']
+     * @param {boolean} [addOrdinal=false]
      */
-    listProto.initData = function (data, nameList, valueProp) {
+    listProto.initData = function (data, nameList, valueProp, addOrdinal) {
         data = data || [];
 
         valueProp = valueProp || 'value';
@@ -285,7 +286,9 @@ define(function (require) {
                 var dim = dimensions[k];
                 var dimInfo = dimensionInfoMap[dim];
                 var dimStorage = storage[dim];
-                var dimValue = value[k];
+                var dimValue = addOrdinal
+                    ? (!k ? idx : value[k - 1])
+                    : value[k];
                 // PENDING NULL is empty or zero
                 switch (dimInfo.type) {
                     case 'float':
@@ -531,23 +534,28 @@ define(function (require) {
 
     /**
      * Retreive the index of nearest value
-     * @param {number} idx
+     * @param {string|Array.<string>} dim
      * @param {number} value
      * @param {boolean} stack If given value is after stacked
      * @return {number}
      */
     listProto.indexOfNearest = function (dim, value, stack) {
+        if (!zrUtil.isArray(dim)) {
+            dim = dim ? [dim] : [];
+        }
         var storage = this._storage;
         var dimData = storage[dim];
 
         if (dimData) {
             var minDist = Number.MAX_VALUE;
             var nearestIdx = -1;
-            for (var i = 0, len = this.count(); i < len; i++) {
-                var dist = Math.abs(this.get(dim, i, stack) - value);
-                if (dist <= minDist) {
-                    minDist = dist;
-                    nearestIdx = i;
+            for (var j = 0, lenj = dim.length; j < lenj; j++) {
+                for (var i = 0, len = this.count(); i < len; i++) {
+                    var dist = Math.abs(this.get(dim[j], i, stack) - value);
+                    if (dist <= minDist) {
+                        minDist = dist;
+                        nearestIdx = i;
+                    }
                 }
             }
             return nearestIdx;

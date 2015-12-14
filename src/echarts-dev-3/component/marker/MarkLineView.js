@@ -47,7 +47,8 @@ define(function (require) {
             mlFrom[valueAxisKey] = mlTo[valueAxisKey] = value;
 
             item = [mlFrom, mlTo, { // Extra option for tooltip and label
-                __rawValue: value
+                __rawValue: value,
+                type: mlType
             }];
         }
         item = [
@@ -63,9 +64,9 @@ define(function (require) {
         return item;
     };
 
-    function markLineFilter(coordSys, dimensionInverse, item) {
-        return markerHelper.dataFilter(coordSys, dimensionInverse, item[0])
-            && markerHelper.dataFilter(coordSys, dimensionInverse, item[1]);
+    function markLineFilter(coordSys, item) {
+        return markerHelper.dataFilter(coordSys, item[0])
+            && markerHelper.dataFilter(coordSys, item[1]);
     }
 
     var markLineFormatMixin = {
@@ -228,35 +229,28 @@ define(function (require) {
      * @param {module:echarts/model/Model} mpModel
      */
     function createList(coordSys, seriesData, mlModel) {
-        var dataDimensions = seriesData.dimensions;
+        // var dataDimensions = seriesData.dimensions;
+        // var dimensionInfosMap = zrUtil.map(
+        //         dataDimensions, seriesData.getDimensionInfo, seriesData
+        //     );
 
-        var dimensionInfosMap = zrUtil.map(
-                dataDimensions, seriesData.getDimensionInfo, seriesData
-            );
-        var fromData = new List(dimensionInfosMap, mlModel);
-        var toData = new List(dimensionInfosMap, mlModel);
+        // Mark line get the dimensions from coordinate system
+        // Because user specify the data by xAxis, yAxis
+        var dimensions = coordSys.dimensions;
+        var fromData = new List(dimensions, mlModel);
+        var toData = new List(dimensions, mlModel);
         // No dimensions
         var lineData = new List([], mlModel);
 
         if (coordSys) {
             var baseAxis = coordSys.getBaseAxis();
             var valueAxis = coordSys.getOtherAxis(baseAxis);
-            var coordDimensions = coordSys.dimensions;
-
-            var indexOf = zrUtil.indexOf;
-            // FIXME 公用？
-            var coordDataIdx = [
-                indexOf(dataDimensions, coordDimensions[0]),
-                indexOf(dataDimensions, coordDimensions[1])
-            ];
 
             var optData = zrUtil.filter(
                 zrUtil.map(mlModel.get('data'), zrUtil.curry(
                     markLineTransform, seriesData, coordSys, baseAxis, valueAxis
                 )),
-                zrUtil.curry(
-                    markLineFilter, coordSys, coordDataIdx
-                )
+                zrUtil.curry(markLineFilter, coordSys)
             );
             fromData.initData(
                 zrUtil.map(optData, function (item) { return item[0]; })

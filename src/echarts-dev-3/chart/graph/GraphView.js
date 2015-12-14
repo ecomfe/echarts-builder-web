@@ -62,7 +62,6 @@ define(function (require) {
                 });
             });
 
-
             // Save the original lineWidth
             data.graph.eachEdge(function (edge) {
                 edge.__lineWidth = edge.getModel('lineStyle.normal').get('width');
@@ -75,11 +74,52 @@ define(function (require) {
             });
 
             this._nodeScaleRatio = seriesModel.get('nodeScaleRatio');
-            this._edgeScaleRatio = seriesModel.get('edgeScaleRatio');
+            // this._edgeScaleRatio = seriesModel.get('edgeScaleRatio');
 
             this._updateNodeAndLinkScale();
 
             this._updateController(seriesModel, coordSys, api);
+
+            clearTimeout(this._layoutTimeout);
+            var forceLayout = seriesModel.forceLayout;
+            var layoutAnimation = seriesModel.get('force.layoutAnimation');
+            if (forceLayout) {
+                this._startForceLayoutIteration(forceLayout, layoutAnimation);
+            }
+            // Update draggable
+            data.eachItemGraphicEl(function (el, idx) {
+                var draggable = data.getItemModel(idx).get('draggable');
+                if (draggable && forceLayout) {
+                    el.on('drag', function () {
+                        forceLayout.warmUp();
+                        !this._layouting
+                            && this._startForceLayoutIteration(forceLayout, layoutAnimation);
+                        forceLayout.setFixed(idx);
+                        // Write position back to layout
+                        data.setItemLayout(idx, el.position);
+                    }, this).on('dragend', function () {
+                        forceLayout.setUnfixed(idx);
+                    }, this);
+                }
+                else {
+                    el.off('drag');
+                }
+                el.setDraggable(draggable);
+            }, this);
+        },
+
+        _startForceLayoutIteration: function (forceLayout, layoutAnimation) {
+            var self = this;
+            (function step() {
+                forceLayout.step(function (stopped) {
+                    self.updateLayout();
+                    (self._layouting = !stopped) && (
+                        layoutAnimation
+                            ? (self._layoutTimeout = setTimeout(step, 16))
+                            : step()
+                    );
+                });
+            })();
         },
 
         _updateController: function (seriesModel, coordSys, api) {
@@ -117,13 +157,13 @@ define(function (require) {
 
             var group = this.group;
             var nodeScaleRatio = this._nodeScaleRatio;
-            var edgeScaleRatio = this._edgeScaleRatio;
+            // var edgeScaleRatio = this._edgeScaleRatio;
 
             // Assume scale aspect is 1
             var groupScale = group.scale[0];
 
             var nodeScale = (groupScale - 1) * nodeScaleRatio + 1;
-            var edgeScale = (groupScale - 1) * edgeScaleRatio + 1;
+            // var edgeScale = (groupScale - 1) * edgeScaleRatio + 1;
             var invScale = [
                 nodeScale / groupScale,
                 nodeScale / groupScale
@@ -132,14 +172,14 @@ define(function (require) {
             data.eachItemGraphicEl(function (el, idx) {
                 el.attr('scale', invScale);
             });
-
-            data.graph.eachEdge(function (edge) {
-                var lineGroup = edge.getGraphicEl();
-                lineGroup.childOfName('line').setStyle(
-                    'lineWidth',
-                    edge.__lineWidth * edgeScale / groupScale
-                );
-            });
+            // data.graph.eachEdge(function (edge) {
+            //     var lineGroup = edge.getGraphicEl();
+            //     // FIXME
+            //     lineGroup.childOfName('line').setStyle(
+            //         'lineWidth',
+            //         edge.__lineWidth * edgeScale / groupScale
+            //     );
+            // });
         },
 
         updateLayout: function (seriesModel, ecModel) {
@@ -148,8 +188,8 @@ define(function (require) {
         },
 
         remove: function (ecModel, api) {
-            this._symbolDraw.remove();
-            this._lineDraw.remove();
+            this._symbolDraw && this._symbolDraw.remove();
+            this._lineDraw && this._lineDraw.remove();
         }
     });
 });

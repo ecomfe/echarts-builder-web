@@ -26,7 +26,7 @@ define(function(require) {
         defaultOption: {
             zlevel: 0,                 // 一级层叠
             z: 4,                      // 二级层叠
-            show: false,
+            show: true,
             orient: null,             // 布局方式，默认根据axisIndex自适应。可选值为：'horizontal' ¦ 'vertical'
             xAxisIndex: null,         // 默认控制所有横向类目
             yAxisIndex: null,         // 默认控制所有横向类目
@@ -36,6 +36,8 @@ define(function(require) {
                                       // 'empty': data items which are out of window will be set to empty.
                                       //          This option is applicable when user should not neglect
                                       //          that there are some data items out of window.
+            throttle: 100,          // Dispatch action by the fixed rate, avoid frequency.
+                                    // default 100. Do not throttle when use null/undefined.
             start: 0,               // 默认为0
             end: 100,               // 默认为全部 100%
             start2: 0,               // 默认为0
@@ -298,7 +300,7 @@ define(function(require) {
             this.eachTargetAxis(function (dimNames, axisIndex, dataZoomModel, ecModel) {
                 this.getAxisOperator(dimNames.name, axisIndex).backupCrossZero(
                     this,
-                    ecModel.getComponent(dimNames.axis, axisIndex).get('scale')
+                    !ecModel.getComponent(dimNames.axis, axisIndex).get('scale')
                 );
             }, this);
         },

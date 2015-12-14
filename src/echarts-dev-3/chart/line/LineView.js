@@ -31,7 +31,7 @@ define(function(require) {
     }
 
     function getAxisExtentWithGap(axis) {
-        var extent = axis.getExtent();
+        var extent = axis.getGlobalExtent();
         if (axis.onBand) {
             // Remove extra 1px to avoid line miter in clipped edge
             var halfBandWidth = axis.getBandWidth() / 2 - 1;
@@ -187,7 +187,7 @@ define(function(require) {
 
             var lineGroup = this._lineGroup;
 
-            var hasAnimation = ecModel.get('animation');
+            var hasAnimation = seriesModel.get('animation');
 
             var isAreaChart = !areaStyleModel.isEmpty();
             var stackedOnPoints = getStackedOnPoints(coordSys, data);
@@ -241,7 +241,7 @@ define(function(require) {
                 // Stop symbol animation and sync with line points
                 // FIXME performance?
                 data.eachItemGraphicEl(function (el) {
-                    el.stopAnimation(true);
+                    el.stopSymbolAnimation(true);
                 });
 
                 // In the case data zoom triggerred refreshing frequently
@@ -328,8 +328,8 @@ define(function(require) {
                     symbol.__temp = true;
                     data.setItemGraphicEl(dataIndex, symbol);
 
-                    // Stop scale animation;
-                    symbol.childAt(0).stopAnimation(true);
+                    // Stop scale animation
+                    symbol.stopSymbolAnimation(true);
 
                     this.group.add(symbol);
                 }

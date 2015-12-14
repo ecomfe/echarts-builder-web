@@ -2,6 +2,8 @@ define(function (require) {
 
     var OrdinalScale = require('../scale/Ordinal');
     var IntervalScale = require('../scale/Interval');
+    require('../scale/Time');
+    require('../scale/Log');
     var Scale = require('../scale/Scale');
 
     var numberUtil = require('../util/number');
@@ -82,9 +84,10 @@ define(function (require) {
      */
     axisHelper.ifAxisCrossZero = function (axis) {
         var dataExtent = axis.scale.getExtent();
-        return !((dataExtent[0] > 0 && dataExtent[1] > 0)
-                    || (dataExtent[0] < 0 && dataExtent[1] < 0))
-                || axisHelper.ifAxisNeedsCrossZero(axis);
+        var min = Math.min(axis.model.get('min'), dataExtent[0], dataExtent[1]);
+        var max = Math.max(axis.model.get('max'), dataExtent[0], dataExtent[1]);
+        return !((min > 0 && max > 0) || (min < 0 && max < 0))
+            || axisHelper.ifAxisNeedsCrossZero(axis);
     };
 
     /**

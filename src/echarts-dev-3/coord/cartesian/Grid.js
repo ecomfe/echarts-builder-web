@@ -103,33 +103,36 @@ define(function(require, factory) {
         var axesList = this._axesList;
 
         adjustAxes();
+
         // Minus label size
         if (gridModel.get('containLabel')) {
             each(axesList, function (axis) {
-                var labelUnionRect = getLabelUnionRect(axis);
-                var dim = axis.isHorizontal() ? 'height' : 'width';
-                var margin = axis.model.get('axisLabel.margin');
-                gridRect[dim] -= labelUnionRect[dim] + margin;
-                if (axis.position === 'top') {
-                    gridRect.y += labelUnionRect.height + margin;
-                }
-                else if (axis.position === 'left')  {
-                    gridRect.x += labelUnionRect.width + margin;
+                if (!axis.model.get('axisLabel.inside')) {
+                    var labelUnionRect = getLabelUnionRect(axis);
+                    if (labelUnionRect) {
+                        var dim = axis.isHorizontal() ? 'height' : 'width';
+                        var margin = axis.model.get('axisLabel.margin');
+                        gridRect[dim] -= labelUnionRect[dim] + margin;
+                        if (axis.position === 'top') {
+                            gridRect.y += labelUnionRect.height + margin;
+                        }
+                        else if (axis.position === 'left')  {
+                            gridRect.x += labelUnionRect.width + margin;
+                        }
+                    }
                 }
             });
 
             adjustAxes();
         }
 
-
         function adjustAxes() {
             each(axesList, function (axis) {
                 var isHorizontal = axis.isHorizontal();
-                var extent = isHorizontal
-                    ? [gridRect.x, gridRect.x + gridRect.width]
-                    : [gridRect.y + gridRect.height, gridRect.y];
+                var extent = isHorizontal ? [0, gridRect.width] : [0, gridRect.height];
                 var idx = axis.inverse ? 1 : 0;
                 axis.setExtent(extent[idx], extent[1 - idx]);
+                updateAxisTransfrom(axis, isHorizontal ? gridRect.x : gridRect.y);
             });
         }
     };
@@ -215,13 +218,11 @@ define(function(require, factory) {
                 // onZero can not be used in these two situations
                 // 1. When other axis is a category axis
                 // 2. When other axis not across 0 point
-                if (xAxis.type === 'category'
-                    || !ifAxisCrossZero(xAxis)
+                if (xAxis.type === 'category' || !ifAxisCrossZero(xAxis)
                 ) {
                     yAxis.onZero = false;
                 }
-                if (yAxis.type === 'category'
-                  || !ifAxisCrossZero(yAxis)
+                if (yAxis.type === 'category' || !ifAxisCrossZero(yAxis)
                 ) {
                     xAxis.onZero = false;
                 }
@@ -319,18 +320,44 @@ define(function(require, factory) {
 
                 var data = seriesModel.getData();
                 if (data.type === 'list') {
-                    var xAxis = cartesian.getAxis('x');
-                    var yAxis = cartesian.getAxis('y');
-                    xAxis.scale.unionExtent(
-                        data.getDataExtent('x', xAxis.scale.type !== 'ordinal')
-                    );
-                    yAxis.scale.unionExtent(
-                        data.getDataExtent('y', yAxis.scale.type !== 'ordinal')
-                    );
+                    unionExtent(data, cartesian.getAxis('x'), 'x', seriesModel);
+                    unionExtent(data, cartesian.getAxis('y'), 'y', seriesModel);
                 }
             }
         }, this);
+
+        function unionExtent(data, axis, axisDim, seriesModel) {
+            each(seriesModel.getDimensionsOnAxis(axisDim), function (dim) {
+                axis.scale.unionExtent(data.getDataExtent(
+                    dim, axis.scale.type !== 'ordinal'
+                ));
+            });
+        }
     };
+
+    /**
+     * @inner
+     */
+    function updateAxisTransfrom(axis, coordBase) {
+        var axisExtent = axis.getExtent();
+        var axisExtentSum = axisExtent[0] + axisExtent[1];
+
+        // Fast transform
+        axis.toGlobalCoord = axis.dim === 'x'
+            ? function (coord) {
+                return coord + coordBase;
+            }
+            : function (coord) {
+                return axisExtentSum - coord + coordBase;
+            };
+        axis.toLocalCoord = axis.dim === 'x'
+            ? function (coord) {
+                return coord - coordBase;
+            }
+            : function (coord) {
+                return axisExtentSum - coord + coordBase;
+            };
+    }
 
     Grid.create = function (ecModel, api) {
         var grids = [];

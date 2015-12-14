@@ -13,17 +13,13 @@ define(function (require) {
 
         getInitialData: function (option, ecModel) {
             var list = createListFromArray(option.data, this, ecModel);
-            // Not holding the data anymore so it can be removed in momory
-            // PENDING
-            // option.data = null;
-
             return list;
         },
 
         defaultOption: {
             coordinateSystem: 'cartesian2d',
-            zlevel: 0,                  // 一级层叠
-            z: 2,                       // 二级层叠
+            zlevel: 0,
+            z: 2,
             legendHoverLink: true,
 
             hoverAnimation: true,
@@ -33,6 +29,9 @@ define(function (require) {
 
             // Polar coordinate system
             polarIndex: 0,
+
+            // Geo coordinate system
+            geoIndex: 0,
 
             // symbol: null,        // 图形类型
             symbolSize: 10,          // 图形大小，半宽（半径）参数，当图形为方向或菱形则总宽度为symbolSize * 2

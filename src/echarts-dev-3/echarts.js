@@ -73,7 +73,8 @@ define(function (require) {
          * @private
          */
         this._zr = zrender.init(dom, {
-            renderer: opts.renderer || 'canvas'
+            renderer: opts.renderer || 'canvas',
+            devicePixelRatio: opts.devicePixelRatio
         });
 
         /**
@@ -736,6 +737,9 @@ define(function (require) {
         chart.id = idBase++;
         instances[chart.id] = chart;
 
+        dom.setAttribute &&
+            dom.setAttribute(DOM_ATTRIBUTE_KEY, chart.id);
+
         // Connecting
         zrUtil.each(eventActionMap, function (actionType, eventType) {
             // FIXME
@@ -955,7 +959,9 @@ define(function (require) {
         zrUtil.createCanvas = creator;
     };
 
-    echarts.registerVisualCoding('echarts', require('./visual/seriesColor'));
+    echarts.registerVisualCoding('echarts', zrUtil.curry(
+        require('./visual/seriesColor'), '', 'itemStyle'
+    ));
     echarts.registerPreprocessor(require('./preprocessor/backwardCompat'));
 
     // Default action
@@ -969,6 +975,26 @@ define(function (require) {
         event: 'downplay',
         update: 'downplay'
     }, zrUtil.noop);
+
+
+    // --------
+    // Exports
+    // --------
+
+    echarts.graphic = require('echarts/util/graphic');
+    echarts.number = require('echarts/util/number');
+    echarts.format = require('echarts/util/format');
+
+    echarts.util = {};
+    each([
+            'map', 'each', 'filter', 'indexOf', 'inherits',
+            'reduce', 'filter', 'bind', 'curry', 'isArray',
+            'isString', 'isObject', 'isFunction', 'extend'
+        ],
+        function (name) {
+            echarts.util[name] = zrUtil[name];
+        }
+    );
 
     return echarts;
 });
