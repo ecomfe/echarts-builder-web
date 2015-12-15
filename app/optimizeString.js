@@ -4,7 +4,7 @@ define(function (require) {
 
     var SYNTAX = estraverse.Syntax;
 
-    var STR_MIN_LENGTH = 8;
+    var STR_MIN_LENGTH = 5;
     var STR_MIN_DIST = 1000;
     var STR_MIN_COUNT = 4;
 

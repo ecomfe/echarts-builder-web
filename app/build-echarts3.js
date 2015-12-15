@@ -114,8 +114,7 @@ define(function (require) {
                 vml: BUILD_CONFIG.vml
             });
             if (!BUILD_CONFIG.source) {
-                // FIXME 文件特别大的时候不能 mangle 字符串变量
-                // code = optimizeString(code);
+                code = optimizeString(code);
             }
             code = startWrapperCode + amdCode + code + endWrapperCode;
         }
