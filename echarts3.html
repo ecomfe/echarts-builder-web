@@ -198,6 +198,7 @@
     </footer>
 
     <script src="lib/jquery.js"></script>
+    <script src="app/log.js"></script>
     <script>
 
         function updateCheckbox() {
@@ -229,28 +230,28 @@
                 components.push($(this).attr('name'));
             });
 
-            var url = 'build-echarts3.html?charts=' + charts.join(',') + '&components=' + components.join(',');
+            var parameters = 'charts=' + charts.join(',') + '&components=' + components.join(',');
 
             if (!$('#compress').prop('checked')) {
-                url += '&source=true';
+                parameters += '&source=true';
             }
             if ($('#vml').prop('checked')) {
-                url += '&vml=true';
+                parameters += '&vml=true';
             }
 
-            url += '&version=3';
-            url += '&dev=true';
+            parameters += '&version=3';
+            parameters += '&dev=true';
 
             var email = $('#email').val();
+            var log = parameters;
             if (email) {
-                url += '&email=' + email;
-                // Try use custom var
-                _hmt.push(['_setCustomVar', 1, 'email', email, 1]);
+                log += '&email=' + email;
             }
+            ecLog({
+                'build-parameters-3': log
+            });
 
-            _hmt.push(['_trackEvent', 'Custom Echarts 3 builder', 'build', url]);
-
-            window.open(url);
+            window.open('build-echarts3.html?' + parameters);
         });
     </script>
     <script>

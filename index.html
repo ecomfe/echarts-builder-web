@@ -158,6 +158,7 @@
     </footer>
 
     <script src="lib/jquery.js"></script>
+    <script src="app/log.js"></script>
     <script>
 
         function updateCheckbox() {
@@ -186,21 +187,25 @@
                 components.push($(this).attr('name'));
             });
 
-            var url = 'build.html?' + 'charts=' + charts.join(',') + '&components=' + components.join(',');
+            var parameters = 'build.html?' + 'charts=' + charts.join(',') + '&components=' + components.join(',');
 
             if (!$('#compress').prop('checked')) {
-                url += '&source=true';
+                parameters += '&source=true';
             }
             if ($('#amd').prop('checked')) {
-                url += '&amd=true';
+                parameters += '&amd=true';
             }
             if ($('#dev').prop('checked')) {
-                url += '&dev=true';
+                parameters += '&dev=true';
             }
 
-            _hmt.push(['_trackEvent', 'Custom Echarts builder', 'build', url]);
+            parameters += '&version=2';
 
-            window.open(url);
+            ecLog({
+                'build-parameters': parameters
+            });
+
+            window.open('build.html?' + parameters);
         });
     </script>
     <script>
