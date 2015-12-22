@@ -2,10 +2,9 @@ var Fontmin = require('fontmin');
 var htmlToText = require('html-to-text');
 var path = require('path');
 var fs = require('fs');
-var html = ['index', 'echarts3'].map(function (name) {
-    return fs.readFileSync(path.join(__dirname, '../../' + name + '.html'), 'utf-8');
+var text = ['index', 'echarts3', 'map3'].map(function (name) {
+    return htmlToText.fromString(fs.readFileSync(path.join(__dirname, '../../' + name + '.html'), 'utf-8'));
 }).join('');
-var text = htmlToText.fromString(html);
 // htmlToText.fromString(html, {}, function (err, text) {
 new Fontmin()
     .src('./noto-thin.ttf')

@@ -1,7 +1,7 @@
 define(function(require) {
 
     var formatUtil = require('../util/format');
-    var addCommas = formatUtil.addCommas;
+    // var addCommas = formatUtil.addCommas;
     var Model = require('../model/Model');
 
     var zrUtil = require('zrender/core/util');
@@ -209,8 +209,8 @@ define(function(require) {
             var seriesIndex = this.seriesIndex;
             var seriesName = this.name;
 
+            var rawValue = this.getRawValue(dataIndex);
             var rawDataIndex = data.getRawIndex(dataIndex);
-            var rawValue = data.getRawValue(dataIndex);
             var name = data.getName(dataIndex, true);
 
             // Data may not exists in the option given by user
@@ -252,13 +252,21 @@ define(function(require) {
                 return formatter(params);
             }
             else if (typeof formatter === 'string') {
-                // TODO ETPL ?
-                return formatter.replace('{a}','{a0}')
-                                .replace('{b}','{b0}')
-                                .replace('{c}','{c0}')
-                                .replace('{a0}', params.seriesName)
-                                .replace('{b0}', params.name)
-                                .replace('{c0}', addCommas(params.value));
+                return formatUtil.formatTpl(formatter, params);
+            }
+        },
+
+        /**
+         * Get raw value in option
+         * @param {number} idx
+         * @return {Object}
+         */
+        getRawValue: function (idx) {
+            var itemModel = this.getData().getItemModel(idx);
+            if (itemModel && itemModel.option) {
+                var dataItem = itemModel.option;
+                return (zrUtil.isObject(dataItem) && !zrUtil.isArray(dataItem))
+                    ? dataItem.value : dataItem;
             }
         }
     };

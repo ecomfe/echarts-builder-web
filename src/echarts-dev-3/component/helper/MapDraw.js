@@ -115,6 +115,7 @@ define(function (require) {
                 var dataIdx;
                 // Use the itemStyle in data if has data
                 if (data) {
+                    // FIXME If dataIdx < 0
                     dataIdx = data.indexOfName(region.name);
                     var itemModel = data.getItemModel(dataIdx);
 
@@ -179,14 +180,14 @@ define(function (require) {
                     var text = new graphic.Text({
                         style: {
                             text: showLabel ? (formattedStr || region.name) : '',
-                            fill: textStyleModel.get('color'),
+                            fill: textStyleModel.getTextColor(),
                             textFont: textStyleModel.getFont(),
                             textAlign: 'center',
                             textBaseline: 'middle'
                         },
                         hoverStyle: {
                             text: hoverShowLabel ? (hoverFormattedStr || region.name) : '',
-                            fill: hoverTextStyleModel.get('color'),
+                            fill: hoverTextStyleModel.getTextColor(),
                             textFont: hoverTextStyleModel.getFont()
                         },
                         position: region.center.slice(),

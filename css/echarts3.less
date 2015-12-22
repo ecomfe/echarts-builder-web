@@ -81,7 +81,19 @@ main {
     text-align: left;
 }
 
-#configuration {
+#map-download-link {
+    text-align: center;
+    font-size: 18px;
+    a {
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+#configuration,
+#maps {
 
     p.desc {
         color: #888;
@@ -164,6 +176,43 @@ main {
             }
         }
     }
+}
+
+#maps {
+    #china, #world {
+        li {
+            img {
+                width: 300px;
+                height: auto;
+            }
+        }
+    }
+    li {
+        cursor: default;
+        width: auto;
+        margin: 20px 15px;
+        &:hover {
+            box-shadow: none;
+        }
+        a {
+            font-size: 14px;
+        }
+        h5 {
+            background: none;
+            color: #000;
+            font-size: 16px;
+        }
+        img {
+            height: 150px;
+            width: auto;
+        }
+    }
+}
+
+#map-example {
+    margin-bottom: 100px;
+    line-height: 2em;
+    font-size: 14px;
 }
 
 #other {

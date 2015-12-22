@@ -21,6 +21,7 @@ define(function () {
 
         // 主题，主题
         textStyle: {
+            // color: '#000',
             decoration: 'none',
             // PENDING
             fontFamily: platform.match(/^Win/) ? 'Microsoft YaHei' : 'sans-serif',

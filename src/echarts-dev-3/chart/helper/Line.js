@@ -229,7 +229,7 @@ define(function (require) {
         var labelHoverModel = itemModel.getModel('label.emphasis');
         var textStyleHoverModel = labelHoverModel.getModel('textStyle');
 
-        var defaultText = numberUtil.round(seriesModel.getData().getRawValue(idx));
+        var defaultText = numberUtil.round(seriesModel.getRawValue(idx));
         line.setStyle(zrUtil.extend(
             {
                 stroke: lineData.getItemVisual(idx, 'color')
@@ -243,14 +243,14 @@ define(function (require) {
                 ? seriesModel.getFormattedLabel(idx, 'normal') || defaultText
                 : '',
             textFont: textStyleModel.getFont(),
-            fill: textStyleModel.get('color') || lineData.getItemVisual(idx, 'color')
+            fill: textStyleModel.getTextColor() || lineData.getItemVisual(idx, 'color')
         });
         label.hoverStyle = {
             text: labelHoverModel.get('show')
                 ? seriesModel.getFormattedLabel(idx, 'emphasis') || defaultText
                 : '',
             textFont: textStyleModel.getFont(),
-            fill: textStyleHoverModel.get('color')
+            fill: textStyleHoverModel.getTextColor()
         };
         label.__textAlign = textStyleModel.get('align');
         label.__textBaseline = textStyleModel.get('baseline');

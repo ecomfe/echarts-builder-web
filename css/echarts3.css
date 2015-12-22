@@ -58,26 +58,42 @@ main h1 {
   color: #3c485c;
   font-weight: normal;
 }
-#configuration p.desc {
+#map-download-link {
+  text-align: center;
+  font-size: 18px;
+}
+#map-download-link a {
+  text-decoration: none;
+}
+#map-download-link a:hover {
+  text-decoration: underline;
+}
+#configuration p.desc,
+#maps p.desc {
   color: #888;
 }
-#configuration > section {
+#configuration > section,
+#maps > section {
   border-bottom: 1px solid #e5e5e5;
   margin-top: 40px;
 }
-#configuration h3 {
+#configuration h3,
+#maps h3 {
   color: #3c485c;
   font-size: 26px;
   font-weight: normal;
 }
-#configuration h3 span {
+#configuration h3 span,
+#maps h3 span {
   font-size: 16px;
   margin-left: 5px;
 }
-#configuration ul {
+#configuration ul,
+#maps ul {
   margin: 10px;
 }
-#configuration li {
+#configuration li,
+#maps li {
   display: inline-block;
   vertical-align: top;
   margin: 20px 28px;
@@ -86,15 +102,18 @@ main h1 {
   cursor: pointer;
   transition: box-shadow 0.4s;
 }
-#configuration li input {
+#configuration li input,
+#maps li input {
   display: none;
 }
-#configuration li img {
+#configuration li img,
+#maps li img {
   margin-top: 5px;
   width: 90px;
   height: 90px;
 }
-#configuration li h5 {
+#configuration li h5,
+#maps li h5 {
   background-color: #293c55;
   color: white;
   font-weight: normal;
@@ -104,17 +123,21 @@ main h1 {
   line-height: 25px;
   position: relative;
 }
-#configuration li h5 span {
+#configuration li h5 span,
+#maps li h5 span {
   font-size: 12px;
   margin-left: 3px;
 }
-#configuration li:hover {
+#configuration li:hover,
+#maps li:hover {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
-#configuration li.checked {
+#configuration li.checked,
+#maps li.checked {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
-#configuration li.checked h5::before {
+#configuration li.checked h5::before,
+#maps li.checked h5::before {
   content: '';
   width: 15px;
   height: 15px;
@@ -124,6 +147,36 @@ main h1 {
   position: absolute;
   right: 0;
   top: -102px;
+}
+#maps #china li img,
+#maps #world li img {
+  width: 300px;
+  height: auto;
+}
+#maps li {
+  cursor: default;
+  width: auto;
+  margin: 20px 15px;
+}
+#maps li:hover {
+  box-shadow: none;
+}
+#maps li a {
+  font-size: 14px;
+}
+#maps li h5 {
+  background: none;
+  color: #000;
+  font-size: 16px;
+}
+#maps li img {
+  height: 150px;
+  width: auto;
+}
+#map-example {
+  margin-bottom: 100px;
+  line-height: 2em;
+  font-size: 14px;
 }
 #other p.desc {
   font-size: 14px;

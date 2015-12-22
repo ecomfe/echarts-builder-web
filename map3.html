@@ -1,0 +1,121 @@
+<!Doctype html>
+<html>
+<head>
+    <title>ECharts3 地图下载</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="css/echarts3.css">
+</head>
+<body>
+    <header id="header">
+        <div class="logo">
+            <a href="//echarts.baidu.com" target="_blank">
+                <img src="img/echarts3.png" />
+            </a>
+        </div>
+    </header>
+    <main id="map3-download">
+        <h1>ECharts 3.0 测试版地图下载</h1>
+        <div id="maps">
+            <section id="china">
+                <h3>中国地图<span>china</span></h3>
+                <ul>
+                    <li>
+                        <img src="map/thumb/china.png" alt="">
+                        <div class="links">
+                            <a href="map/js/china.js" target="_blank">JS</a>
+                            <a href="map/json/china.json" target="_blank" href="">JSON</a>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+            <section id="world">
+                <h3>世界地图<span>world</span></h3>
+                <ul>
+                    <li>
+                        <img src="map/thumb/world.png" alt="">
+                        <div class="links">
+                            <a href="map/js/world.js" target="_blank">JS</a>
+                            <a href="map/json/world.json" target="_blank" href="">JSON</a>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+            <section id="province">
+                <h3>各省地图<span>province</span></h3>
+                <ul></ul>
+            </section>
+        </div>
+        <div id="map-example">
+            <h4>JavaScript 引入示例</h4>
+            <pre class="html">
+&lt;script src="echarts.js"&gt;&lt;/script&gt;
+&lt;script src="map/js/china.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+var chart = echarts.init(document.getElmentById('main'));
+chart.setOption({
+    series: [{
+        type: 'map',
+        map: 'china'
+    }]
+});
+&lt;/script&gt;
+            </pre>
+            <h4>JSON 引入示例</h4>
+            <pre class="javascript">
+$.get('map/json/china.json', function (chinaJson) {
+    echarts.registerMap('china', chinaJson);
+    var chart = echarts.init(document.getElmentById('main'));
+    chart.setOption({
+        series: [{
+            type: 'map',
+            map: 'china'
+        }]
+    });
+});
+            </pre>
+        </div>
+    </main>
+    <!-- for fonts -->
+    <div style="display:none">'河北', '山西', '内蒙古', '辽宁', '吉林','黑龙江',  '江苏', '浙江', '安徽', '福建', '江西', '山东','河南', '湖北', '湖南', '广东', '广西', '海南', '四川', '贵州', '云南', '西藏', '陕西', '甘肃', '青海', '宁夏', '新疆'</div>
+    <script src="lib/jquery.js"></script>
+
+    <link rel="stylesheet" href="lib/highlight/styles/atelier-dune.light.css">
+    <script src="lib/highlight/highlight.pack.js"></script>
+    <script>
+        $('pre').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+    </script>
+
+    <script>
+        var provincePinyin = ['hebei','shanxi','neimenggu','liaoning','jilin','heilongjiang','jiangsu','zhejiang','anhui','fujian','jiangxi','shandong','henan','hubei','hunan','guangdong','guangxi','hainan','sichuan','guizhou','yunnan','xicang','shanxi','gansu','qinghai','ningxia','xinjiang'];
+        var province = ['河北', '山西', '内蒙古', '辽宁', '吉林','黑龙江',  '江苏', '浙江', '安徽', '福建', '江西', '山东','河南', '湖北', '湖南', '广东', '广西', '海南', '四川', '贵州', '云南', '西藏', '陕西', '甘肃', '青海', '宁夏', '新疆'];
+
+        for (var i = 0; i < province.length; i++) {
+            var provinceName = province[i];
+            $('#province ul').append('\
+                <li>\
+                    <img src="map/thumb/{pinyin}.png" alt="">\
+                    <h5>{name}</h5>\
+                    <div class="links">\
+                        <a href="map/js/province/{pinyin}.js" target="_blank">JS</a>\
+                        <a href="map/json/province/{pinyin}.json" target="_blank" href="">JSON</a>\
+                    </div>\
+                </li>\
+            '.replace(/\{pinyin\}/g, provincePinyin[i])
+                .replace(/\{name\}/g, provinceName)
+            );
+        }
+    </script>
+
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?4bad1df23f079e0d12bdbef5e65b072f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+</body>
+</html>
