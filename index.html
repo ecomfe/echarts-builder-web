@@ -187,7 +187,7 @@
                 components.push($(this).attr('name'));
             });
 
-            var parameters = 'build.html?' + 'charts=' + charts.join(',') + '&components=' + components.join(',');
+            var parameters = 'charts=' + charts.join(',') + '&components=' + components.join(',');
 
             if (!$('#compress').prop('checked')) {
                 parameters += '&source=true';
